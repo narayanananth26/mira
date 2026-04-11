@@ -6,6 +6,8 @@ typedef unsigned long long U64;
 #define NAME "Mira 1.0"
 #define BRD_SQ_NUM 120
 
+#define MAXGAMEMOVES 2048
+
 // clang-format off
 enum {
     Empty,
@@ -34,5 +36,44 @@ enum {
 //clang-format on
 
 enum { TRUE, FALSE};
+
+enum { WKCA = 1, WQCA = 2, BKCA = 4, BQCA = 8};
+
+typedef struct { 
+
+  int move;
+  int castlePerm;
+  int enPas;
+  int fiftyMove;
+  U64 posKey;
+  
+} S_UNDO;
+
+typedef struct {
+
+  int pieces[BRD_SQ_NUM];
+  U64 pawns[3];
+  
+  int KingSide[2];
+
+  int side; 
+  int enPas; 
+  int fiftyMove;
+
+  int ply; 
+  int hisPly; 
+
+  int castlePerm;
+
+  U64 posKey;
+
+  int pceNum[12];
+  int bigPce[3];
+  int majPce[3];
+  int minPce[3];
+
+S_UNDO history[MAXGAMEMOVES];
+
+} S_BOARD;
 
 #endif

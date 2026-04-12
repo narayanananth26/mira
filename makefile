@@ -1,2 +1,2 @@
 all:
-	gcc mira.c -o mira
+	gcc mira.c init.c -o mira

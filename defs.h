@@ -72,6 +72,9 @@ typedef struct {
   int majPce[3];
   int minPce[3];
 
+  // piece list
+  int pList[13][10]; // type, num (max 10, when all pawns are converted)
+
 S_UNDO history[MAXGAMEMOVES];
 
 } S_BOARD;

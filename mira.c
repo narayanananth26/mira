@@ -4,21 +4,22 @@
 int main() {
     AllInit();
 
-    int index = 0;
+    U64 playBitBoard = 0ULL;
 
-    for (index = 0; index < BRD_SQ_NUM; ++index) {
-        if (index % 10 == 0)
-            printf("\n");
-        printf("%5d", Sq120ToSq64[index]);
-    }
+    printf("Start:\n");
+    PrintBitBoard(playBitBoard);
 
-    printf("\n");
-    printf("\n");
+    playBitBoard |= (1ULL << SQ64(D2));
+    printf("D2 Added:\n");
+    PrintBitBoard(playBitBoard);
 
-    for (index = 0; index < 64; ++index) {
-        if (index % 8 == 0)
-            printf("\n");
-        printf("%5d", Sq64ToSq120[index]);
-    }
+    playBitBoard |= (1ULL << SQ64(G2));
+    printf("G2 Added:\n");
+    PrintBitBoard(playBitBoard);
+
+    playBitBoard |= (1ULL << SQ64(A1));
+    printf("A1 Added:\n");
+    PrintBitBoard(playBitBoard);
+
     return 0;
 }

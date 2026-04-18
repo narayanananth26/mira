@@ -111,6 +111,12 @@ extern int Sq64ToSq120[64];
 
 /* FUNCTIONS */
 
+// init.c
 extern void AllInit();
+
+// bitboards.c
+extern void PrintBitBoard(U64 bb);
+
+
 
 #endif

@@ -1,5 +1,24 @@
 #include "defs.h"
-#include "stdio.h"
+#include <assert.h>
+#include <stdio.h>
+
+const int BitTable[64] = {63, 30, 3,  32, 25, 41, 22, 33, 15, 50, 42, 13, 11, 53, 19, 34, 61, 29, 2,  51, 21, 43, 45, 10, 18, 47, 1,  54, 9,  57, 0,  35,
+                          62, 31, 40, 4,  49, 5,  52, 26, 60, 6,  23, 44, 46, 27, 56, 16, 7,  39, 48, 24, 59, 14, 12, 55, 38, 28, 58, 20, 37, 17, 36, 8};
+
+/*
+ * Find and pop LS1B
+ */
+int PopBit(U64 *bb) {
+    assert(*bb != 0);
+
+    int sq = __builtin_ctzll(*bb); // count trailing zeros
+    *bb &= *bb - 1;                // clear LS1B
+
+    return sq;
+}
+
+// https://www.chessprogramming.org/Population_Count
+int CountBits(U64 b) { return __builtin_popcountll(b); }
 
 void PrintBitBoard(U64 bb) {
 

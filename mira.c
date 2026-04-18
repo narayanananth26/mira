@@ -6,20 +6,25 @@ int main() {
 
     U64 playBitBoard = 0ULL;
 
-    printf("Start:\n");
-    PrintBitBoard(playBitBoard);
-
     playBitBoard |= (1ULL << SQ64(D2));
-    printf("D2 Added:\n");
-    PrintBitBoard(playBitBoard);
-
     playBitBoard |= (1ULL << SQ64(G2));
-    printf("G2 Added:\n");
+    playBitBoard |= (1ULL << SQ64(A1));
+
+    printf("\n");
     PrintBitBoard(playBitBoard);
 
-    playBitBoard |= (1ULL << SQ64(A1));
-    printf("A1 Added:\n");
+    int count = CNT(playBitBoard);
+    printf("Count = %d\n", count);
+
+    int index = POP(&playBitBoard);
+    printf("index = %d\n", count);
+
     PrintBitBoard(playBitBoard);
+
+    count = CNT(playBitBoard);
+    printf("Count = %d\n", count);
+
+    printf("\n\n");
 
     return 0;
 }

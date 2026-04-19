@@ -5,20 +5,6 @@
 
 #define DEBUG
 
-#ifndef DEBUG
-#define ASSERT(n)
-#else
-#define ASSERT(n)                                                                                                                                                                                      \
-    if (!(n)) {                                                                                                                                                                                        \
-        printf("%s Failed\n", #n);                                                                                                                                                                     \
-        printf("On %s\n", __DATE__);                                                                                                                                                                   \
-        printf("At %s\n", __TIME__);                                                                                                                                                                   \
-        printf("In File %s\n", __FILE__);                                                                                                                                                              \
-        printf("At Line %d\n", __LINE__);                                                                                                                                                              \
-        exit(1);                                                                                                                                                                                       \
-    }
-#endif
-
 typedef unsigned long long U64;
 
 #define NAME "Mira 1.0"
@@ -28,9 +14,8 @@ typedef unsigned long long U64;
 
 // clang-format off
 enum {
-    Empty,
-    wP, wN, wB, wR, wQ, wK,
-    bP, bN, bB, bR, bQ, bK,
+    EMPTY,
+    wP, wN, wB, wR, wQ, wK, bP, bN, bB, bR, bQ, bK,
 };
 // clang-format on
 
@@ -114,6 +99,12 @@ extern int Sq64ToSq120[64];
 extern U64 SetMask[64];
 extern U64 ClearMask[64];
 
+extern U64 PieceKeys[13][120];
+extern U64 SideKey;
+extern U64 CastleKeys[16];
+
+
+
 /* FUNCTIONS */
 
 // init.c
@@ -123,5 +114,8 @@ extern void AllInit();
 extern void PrintBitBoard(U64 bb);
 extern int PopBit(U64 *bb);
 extern int CountBits(U64 b);
+
+// hashkeys.c
+extern U64 GenratePosKey(const S_BOARD *pos);
 
 #endif

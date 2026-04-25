@@ -1,4 +1,5 @@
 #include "defs.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 #define RAND_64 ((U64)rand() | ((U64)rand() << 15) | ((U64)rand() << 30) | ((U64)rand() << 45) | (((U64)rand() & 0xf) << 60))
@@ -12,6 +13,45 @@ U64 ClearMask[64];
 U64 PieceKeys[13][120];
 U64 SideKey;
 U64 CastleKeys[16];
+
+int FilesBrd[BRD_SQ_NUM];
+int RanksBrd[BRD_SQ_NUM];
+
+void InitFilesRanksBrd() {
+
+    int index = 0;
+    int file = FILE_A;
+    int rank = RANK_1;
+    int sq = A1;
+    int sq64 = 0;
+
+    for (index = 0; index < BRD_SQ_NUM; ++index) {
+        FilesBrd[index] = OFFBOARD;
+        RanksBrd[index] = OFFBOARD;
+    }
+
+    for (rank = RANK_1; rank <= RANK_8; rank++) {
+        for (file = FILE_A; file <= FILE_H; file++) {
+            sq = FR2SQ(file, rank);
+            FilesBrd[sq] = file;
+            RanksBrd[sq] = rank;
+        }
+    }
+
+    printf("\nFilesBrd:\n");
+    for (index = 0; index < BRD_SQ_NUM; ++index) {
+        if (index % 10 == 0) printf("\n");
+        printf("%3d", FilesBrd[index]);
+    }
+    printf("\n");
+
+    printf("\nRanksBrd:\n");
+    for (index = 0; index < BRD_SQ_NUM; ++index) {
+        if (index % 10 == 0) printf("\n");
+        printf("%3d", RanksBrd[index]);
+    }
+    printf("\n");
+}
 
 void InitHashKeys() {
 
@@ -73,4 +113,5 @@ void AllInit() {
     InitSq120ToSq64();
     InitBitMasks();
     InitHashKeys();
+    InitFilesRanksBrd();
 }

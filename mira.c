@@ -8,19 +8,20 @@
 int main() {
     AllInit();
 
-    S_BOARD board[1];
+    /*
+        S_BOARD board[1];
 
-    ParseFen(START_FEN, board);
-    PrintBoard(board);
+        ParseFen(START_FEN, board);
+        PrintBoard(board);
 
-    ParseFen(FEN1, board);
-    PrintBoard(board);
+        ParseFen(FEN1, board);
+        PrintBoard(board);
 
-    ParseFen(FEN2, board);
-    PrintBoard(board);
+        ParseFen(FEN2, board);
+        PrintBoard(board);
 
-    ParseFen(FEN3, board);
-    PrintBoard(board);
-
+        ParseFen(FEN3, board);
+        PrintBoard(board);
+    */
     return 0;
 }

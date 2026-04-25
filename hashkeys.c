@@ -1,7 +1,7 @@
 #include "defs.h"
 #include <assert.h>
 
-U64 GenratePosKey(const S_BOARD *pos) {
+U64 GeneratePosKey(const S_BOARD *pos) {
 
     int sq = 0;
     int finalKey = 0;

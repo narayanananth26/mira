@@ -9,8 +9,7 @@ U64 GeneratePosKey(const S_BOARD *pos) {
 
     for (sq = 0; sq < BRD_SQ_NUM; ++sq) {
         piece = pos->pieces[sq];
-        if (piece != NO_SQ && piece != EMPTY) {
-            assert(piece >= wP && piece <= bK);
+        if (piece >= wP && piece <= bK) {
             finalKey ^= PieceKeys[piece][sq];
         }
     }

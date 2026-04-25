@@ -2,6 +2,36 @@
 #include <assert.h>
 #include <stdio.h>
 
+void UpdateListsMaterial(S_BOARD *pos) {
+    int piece, sq, index, color;
+
+    for (index = 0; index < BRD_SQ_NUM; ++index) {
+        sq = index;
+        piece = pos->pieces[sq];
+
+        if (piece != OFFBOARD && piece != EMPTY) {
+            color = PieceCol[piece];
+
+            if (PieceBig[piece] == TRUE)
+                pos->bigPce[color]++;
+            if (PieceMaj[piece] == TRUE)
+                pos->majPce[color]++;
+            if (PieceMin[piece] == TRUE)
+                pos->minPce[color]++;
+
+            pos->material[color] += PieceVal[piece];
+
+            pos->pList[piece][pos->pceNum[piece]] = sq;
+            pos->pceNum[piece]++;
+
+            if (piece == wK)
+                pos->KingSq[WHITE] = sq;
+            if (piece == bK)
+                pos->KingSq[BLACK] = sq;
+        }
+    }
+}
+
 int ParseFen(char *fen, S_BOARD *pos) {
     assert(fen != NULL);
     assert(pos != NULL);

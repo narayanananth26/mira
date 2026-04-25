@@ -22,34 +22,40 @@ int ParseFen(char *fen, S_BOARD *pos) {
 
         switch (*fen) {
         case 'p':
-            return piece = bP;
+            piece = bP;
             break;
         case 'r':
-            return piece = bR;
+            piece = bR;
             break;
         case 'n':
-            return piece = bN;
+            piece = bN;
+            break;
+        case 'b':
+            piece = bB;
             break;
         case 'q':
-            return piece = bQ;
+            piece = bQ;
             break;
         case 'k':
-            return piece = bK;
+            piece = bK;
             break;
         case 'P':
-            return piece = wP;
+            piece = wP;
             break;
         case 'R':
-            return piece = wR;
+            piece = wR;
             break;
         case 'N':
-            return piece = wN;
+            piece = wN;
+            break;
+        case 'B':
+            piece = wB;
             break;
         case 'Q':
-            return piece = wQ;
+            piece = wQ;
             break;
         case 'K':
-            return piece = wK;
+            piece = wK;
             break;
 
         case '1':

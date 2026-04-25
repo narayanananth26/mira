@@ -14,7 +14,7 @@ typedef unsigned long long U64;
 
 // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
 //                 RANK_8/../RANK_1 move castlePerm enPas fiftyMove fullMoves
-#define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/pppppppp/RNBQKBNR w KQkq - 0 1"
+#define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 // clang-format off
 enum {

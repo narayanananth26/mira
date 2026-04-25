@@ -12,6 +12,10 @@ typedef unsigned long long U64;
 
 #define MAXGAMEMOVES 2048
 
+// https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+//                 RANK_8/../RANK_1 move castlePerm enPas fiftyMove fullMoves
+#define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/pppppppp/RNBQKBNR w KQkq - 0 1"
+
 // clang-format off
 enum {
     EMPTY,
@@ -117,9 +121,10 @@ extern int PopBit(U64 *bb);
 extern int CountBits(U64 b);
 
 // hashkeys.c
-extern U64 GenratePosKey(const S_BOARD *pos);
+extern U64 GeneratePosKey(const S_BOARD *pos);
 
 // board.c
 extern void ResetBoard(S_BOARD *pos);
+extern int ParseFen(char *fen, S_BOARD *pos);
 
 #endif

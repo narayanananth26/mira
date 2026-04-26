@@ -1,4 +1,5 @@
 #include "defs.h"
+#include <assert.h>
 #include <stdio.h>
 
 #define FEN1 "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"
@@ -15,14 +16,7 @@ int main() {
 
     PrintBoard(board);
 
-    printf("\nwP:\n");
-    PrintBitBoard(board->pawns[WHITE]);
-
-    printf("\nbP:\n");
-    PrintBitBoard(board->pawns[BLACK]);
-
-    printf("\nall P:\n");
-    PrintBitBoard(board->pawns[BOTH]);
+    assert(CheckBoard(board));
 
     return 0;
 }

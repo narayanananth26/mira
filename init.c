@@ -37,20 +37,6 @@ void InitFilesRanksBrd() {
             RanksBrd[sq] = rank;
         }
     }
-
-    printf("\nFilesBrd:\n");
-    for (index = 0; index < BRD_SQ_NUM; ++index) {
-        if (index % 10 == 0) printf("\n");
-        printf("%3d", FilesBrd[index]);
-    }
-    printf("\n");
-
-    printf("\nRanksBrd:\n");
-    for (index = 0; index < BRD_SQ_NUM; ++index) {
-        if (index % 10 == 0) printf("\n");
-        printf("%3d", RanksBrd[index]);
-    }
-    printf("\n");
 }
 
 void InitHashKeys() {

@@ -2,6 +2,92 @@
 #include <assert.h>
 #include <stdio.h>
 
+int CheckBoard(const S_BOARD *pos) {
+
+    int t_pceNum[13] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    int t_bigPce[2] = {0, 0};
+    int t_majPce[2] = {0, 0};
+    int t_minPce[2] = {0, 0};
+    int t_material[2] = {0, 0};
+
+    int sq64, t_piece, t_pce_num, sq120, colour, pcount;
+
+    U64 t_pawns[3] = {0ULL, 0ULL, 0ULL};
+
+    t_pawns[WHITE] = pos->pawns[WHITE];
+    t_pawns[BLACK] = pos->pawns[BLACK];
+    t_pawns[BOTH] = pos->pawns[BOTH];
+
+    // check piece lists
+    for (t_piece = wP; t_piece <= bK; ++t_piece) {
+        for (t_pce_num = 0; t_pce_num < pos->pceNum[t_piece]; ++t_pce_num) {
+            sq120 = pos->pList[t_piece][t_pce_num];
+            assert(pos->pieces[sq120] == t_piece);
+        }
+    }
+
+    // check piece count and other counters
+    for (sq64 = 0; sq64 < 64; ++sq64) {
+        sq120 = SQ120(sq64);
+        t_piece = pos->pieces[sq120];
+        t_pceNum[t_piece]++;
+        colour = PieceCol[t_piece];
+        if (PieceBig[t_piece] == TRUE)
+            t_bigPce[colour]++;
+        if (PieceMin[t_piece] == TRUE)
+            t_minPce[colour]++;
+        if (PieceMaj[t_piece] == TRUE)
+            t_majPce[colour]++;
+
+        t_material[colour] += PieceVal[t_piece];
+    }
+
+    for (t_piece = wP; t_piece <= bK; ++t_piece) {
+        assert(t_pceNum[t_piece] == pos->pceNum[t_piece]);
+    }
+
+    // check bitboards count
+    pcount = CNT(t_pawns[WHITE]);
+    assert(pcount == pos->pceNum[wP]);
+    pcount = CNT(t_pawns[BLACK]);
+    assert(pcount == pos->pceNum[bP]);
+    pcount = CNT(t_pawns[BOTH]);
+    assert(pcount == (pos->pceNum[bP] + pos->pceNum[wP]));
+
+    // check bitboards squares
+    while (t_pawns[WHITE]) {
+        sq64 = POP(&t_pawns[WHITE]);
+        assert(pos->pieces[SQ120(sq64)] == wP);
+    }
+
+    while (t_pawns[BLACK]) {
+        sq64 = POP(&t_pawns[BLACK]);
+        assert(pos->pieces[SQ120(sq64)] == bP);
+    }
+
+    while (t_pawns[BOTH]) {
+        sq64 = POP(&t_pawns[BOTH]);
+        assert((pos->pieces[SQ120(sq64)] == bP) || (pos->pieces[SQ120(sq64)] == wP));
+    }
+
+    assert(t_material[WHITE] == pos->material[WHITE] && t_material[BLACK] == pos->material[BLACK]);
+    assert(t_minPce[WHITE] == pos->minPce[WHITE] && t_minPce[BLACK] == pos->minPce[BLACK]);
+    assert(t_majPce[WHITE] == pos->majPce[WHITE] && t_majPce[BLACK] == pos->majPce[BLACK]);
+    assert(t_bigPce[WHITE] == pos->bigPce[WHITE] && t_bigPce[BLACK] == pos->bigPce[BLACK]);
+
+    assert(pos->side == WHITE || pos->side == BLACK);
+    assert(GeneratePosKey(pos) == pos->posKey);
+
+    assert(pos->enPas == NO_SQ || (RanksBrd[pos->enPas] == RANK_6 && pos->side == WHITE) || (RanksBrd[pos->enPas] == RANK_3 && pos->side == BLACK));
+
+    assert(pos->pieces[pos->KingSq[WHITE]] == wK);
+    assert(pos->pieces[pos->KingSq[BLACK]] == bK);
+
+    assert(pos->castlePerm >= 0 && pos->castlePerm <= 15);
+
+    return TRUE;
+}
+
 void UpdateListsMaterial(S_BOARD *pos) {
     int piece, sq, index, color;
 

@@ -107,7 +107,7 @@ enum {
     OFFBOARD
 };
 
-enum { TRUE, FALSE };
+enum { FALSE, TRUE };
 
 enum { WKCA = 1, WQCA = 2, BKCA = 4, BQCA = 8 };
 

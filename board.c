@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <stdio.h>
 
-int CheckBoard(const S_BOARD *pos) {
+bool CheckBoard(const S_BOARD *pos) {
 
     int t_pceNum[13] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     int t_bigPce[2] = {0, 0};
@@ -32,11 +32,11 @@ int CheckBoard(const S_BOARD *pos) {
         t_piece = pos->pieces[sq120];
         t_pceNum[t_piece]++;
         colour = PieceCol[t_piece];
-        if (PieceBig[t_piece] == TRUE)
+        if (PieceBig[t_piece] == true)
             t_bigPce[colour]++;
-        if (PieceMin[t_piece] == TRUE)
+        if (PieceMin[t_piece] == true)
             t_minPce[colour]++;
-        if (PieceMaj[t_piece] == TRUE)
+        if (PieceMaj[t_piece] == true)
             t_majPce[colour]++;
 
         t_material[colour] += PieceVal[t_piece];
@@ -85,7 +85,7 @@ int CheckBoard(const S_BOARD *pos) {
 
     assert(pos->castlePerm >= 0 && pos->castlePerm <= 15);
 
-    return TRUE;
+    return true;
 }
 
 void UpdateListsMaterial(S_BOARD *pos) {
@@ -98,11 +98,11 @@ void UpdateListsMaterial(S_BOARD *pos) {
         if (piece != OFFBOARD && piece != EMPTY) {
             color = PieceCol[piece];
 
-            if (PieceBig[piece] == TRUE)
+            if (PieceBig[piece] == true)
                 pos->bigPce[color]++;
-            if (PieceMaj[piece] == TRUE)
+            if (PieceMaj[piece] == true)
                 pos->majPce[color]++;
-            if (PieceMin[piece] == TRUE)
+            if (PieceMin[piece] == true)
                 pos->minPce[color]++;
 
             pos->material[color] += PieceVal[piece];

@@ -2,6 +2,7 @@
 #define DEFS_H
 
 #include "stdlib.h"
+#include <stdbool.h>
 
 #define DEBUG
 
@@ -107,8 +108,6 @@ enum {
     OFFBOARD
 };
 
-enum { FALSE, TRUE };
-
 enum { WKCA = 1, WQCA = 2, BKCA = 4, BQCA = 8 };
 
 typedef struct {
@@ -178,9 +177,9 @@ extern char SideChar[];
 extern char RankChar[];
 extern char FileChar[];
 
-extern int PieceBig[13];
-extern int PieceMaj[13];
-extern int PieceMin[13];
+extern bool PieceBig[13];
+extern bool PieceMaj[13];
+extern bool PieceMin[13];
 extern int PieceVal[13];
 extern int PieceCol[13];
 
@@ -205,6 +204,6 @@ extern void ResetBoard(S_BOARD *pos);
 extern int ParseFen(char *fen, S_BOARD *pos);
 extern void PrintBoard(const S_BOARD *pos);
 extern void UpdateListsMaterial(S_BOARD *pos);
-extern int CheckBoard(const S_BOARD *pos);
+extern bool CheckBoard(const S_BOARD *pos);
 
 #endif

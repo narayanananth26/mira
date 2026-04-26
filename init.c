@@ -78,7 +78,7 @@ void InitBitMasks() {
     }
 
     for (index = 0; index < 64; index++) {
-        SetMask[index] |= (1LL << index);
+        SetMask[index] |= (1ULL << index);
         ClearMask[index] = ~SetMask[index];
     }
 }

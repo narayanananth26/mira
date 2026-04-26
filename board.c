@@ -28,6 +28,14 @@ void UpdateListsMaterial(S_BOARD *pos) {
                 pos->KingSq[WHITE] = sq;
             if (piece == bK)
                 pos->KingSq[BLACK] = sq;
+
+            if (piece == wP) {
+                SETBIT(pos->pawns[WHITE], SQ64(sq));
+                SETBIT(pos->pawns[BOTH], SQ64(sq));
+            } else if (piece == bP) {
+                SETBIT(pos->pawns[BLACK], SQ64(sq));
+                SETBIT(pos->pawns[BOTH], SQ64(sq));
+            }
         }
     }
 }
@@ -168,6 +176,8 @@ int ParseFen(char *fen, S_BOARD *pos) {
 
     // generate position hash
     pos->posKey = GeneratePosKey(pos);
+
+    UpdateListsMaterial(pos);
 
     return 0;
 }

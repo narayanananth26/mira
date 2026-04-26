@@ -139,7 +139,7 @@ typedef struct {
 
     U64 posKey;
 
-    int pceNum[12];
+    int pceNum[13];
     int bigPce[2];
     int majPce[2];
     int minPce[2];

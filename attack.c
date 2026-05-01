@@ -1,4 +1,5 @@
 #include "defs.h"
+#include <assert.h>
 
 const int KnDir[8] = {-8, -19, -21, -12, 8, 19, 21, 12};
 const int RkDir[4] = {-1, -10, 1, 10};
@@ -8,6 +9,11 @@ const int KiDir[8] = {-1, -10, 1, 10, -9, -11, 11, 9};
 int SqAttacked(const int sq, const int side, const S_BOARD *pos) {
 
     int pce, index, t_sq, dir;
+
+    assert(SqOnBoard(sq));
+    assert(SideValid(side));
+    assert(CheckBoard(pos));
+
     // pawns
     if (side == WHITE) {
         if (pos->pieces[sq - 11] == wP || pos->pieces[sq - 9] == wP) {

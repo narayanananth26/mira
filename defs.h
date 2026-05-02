@@ -12,6 +12,7 @@ typedef unsigned long long U64;
 #define BRD_SQ_NUM 120
 
 #define MAXGAMEMOVES 2048
+#define MAXPOSITIONMOVES 256
 
 // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
 //                 RANK_8/../RANK_1 move castlePerm enPas fiftyMove fullMoves
@@ -114,6 +115,11 @@ typedef struct {
     int move;
     int score;
 } S_MOVE;
+
+typedef struct {
+    S_MOVE moves[MAXPOSITIONMOVES];
+    int count;
+} S_MOVELIST;
 
 typedef struct {
 
@@ -252,5 +258,15 @@ extern int SqAttacked(const int sq, const int side, const S_BOARD *pos);
 // io.c
 extern char *PrSq(const int sq);
 extern char *PrMove(const int move);
+extern void PrintMoveList(const S_MOVELIST *list);
+
+extern bool SqOnBoard(const int sq);
+extern bool SideValid(const int side);
+extern bool FileRankValid(const int fr);
+extern bool PieceValidEmpty(const int pce);
+extern bool PieceValid(const int pce);
+
+// movegen.c
+extern void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
 
 #endif

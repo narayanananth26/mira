@@ -10,6 +10,22 @@ const int LoopNonSlidePce[6] = {wN, wK, 0, bN, bK, 0};
 const int LoopSlideIndex[2] = {0, 4};
 const int LoopNonSlideIndex[2] = {0, 3};
 
+const int PceDir[13][8] = {{0, 0, 0, 0, 0, 0, 0},
+                           {0, 0, 0, 0, 0, 0, 0},
+                           {-8, -19, -21, -12, 8, 19, 21, 12},
+                           {-9, -11, 11, 9, 0, 0, 0, 0},
+                           {-1, -10, 1, 10, 0, 0, 0, 0},
+                           {-1, -10, 1, 10, -9, -11, 11, 9},
+                           {-1, -10, 1, 10, -9, -11, 11, 9},
+                           {0, 0, 0, 0, 0, 0, 0},
+                           {-8, -19, -21, -12, 8, 19, 21, 12},
+                           {-9, -11, 11, 9, 0, 0, 0, 0},
+                           {-1, -10, 1, 10, 0, 0, 0, 0},
+                           {-1, -10, 1, 10, -9, -11, 11, 9},
+                           {-1, -10, 1, 10, -9, -11, 11, 9}};
+
+const int NumDir[13] = {0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8};
+
 static void AddQuietMove(const S_BOARD *pos, int move, S_MOVELIST *list) {
 
     list->moves[list->count].move = move;
@@ -168,5 +184,37 @@ void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list) {
                 }
             }
         }
+    }
+    /* Loop for non slide */
+    pceIndex = LoopNonSlideIndex[side];
+    pce = LoopNonSlidePce[pceIndex++];
+
+    while (pce != 0) {
+        assert(PieceValid(pce));
+
+        for (pceNum = 0; pceNum < pos->pceNum[pce]; ++pceNum) {
+            sq = pos->pList[pce][pceNum];
+            assert(SqOnBoard(sq));
+
+            for (index = 0; index < NumDir[pce]; ++index) {
+                dir = PceDir[pce][index];
+                t_sq = sq + dir;
+
+                if (SQOFFBOARD(t_sq)) {
+                    continue;
+                }
+
+                // BLACK ^ 1 == WHITE       WHITE ^ 1 == BLACK
+                if (pos->pieces[t_sq] != EMPTY) {
+                    if (PieceCol[pos->pieces[t_sq]] == (side ^ 1)) {
+                        AddCaptureMove(pos, MOVE(sq, t_sq, pos->pieces[t_sq], EMPTY, 0), list);
+                    }
+                    continue;
+                }
+                AddQuietMove(pos, MOVE(sq, t_sq, EMPTY, EMPTY, 0), list);
+            }
+        }
+
+        pce = LoopNonSlidePce[pceIndex++];
     }
 }

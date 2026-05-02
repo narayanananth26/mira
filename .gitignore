@@ -1,1 +1,5 @@
+# output file
 mira
+
+# tooling output
+compile_commands.json

@@ -185,6 +185,38 @@ void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list) {
             }
         }
     }
+
+    /* Loop for slide pieces */
+    pceIndex = LoopSlideIndex[side];
+    pce = LoopSlidePce[pceIndex++];
+    while (pce != 0) {
+        assert(PieceValid(pce));
+
+        for (pceNum = 0; pceNum < pos->pceNum[pce]; ++pceNum) {
+            sq = pos->pList[pce][pceNum];
+            assert(SqOnBoard(sq));
+
+            for (index = 0; index < NumDir[pce]; ++index) {
+                dir = PceDir[pce][index];
+                t_sq = sq + dir;
+
+                while (!SQOFFBOARD(t_sq)) {
+                    // BLACK ^ 1 == WHITE       WHITE ^ 1 == BLACK
+                    if (pos->pieces[t_sq] != EMPTY) {
+                        if (PieceCol[pos->pieces[t_sq]] == (side ^ 1)) {
+                            AddCaptureMove(pos, MOVE(sq, t_sq, pos->pieces[t_sq], EMPTY, 0), list);
+                        }
+                        break;
+                    }
+                    AddQuietMove(pos, MOVE(sq, t_sq, EMPTY, EMPTY, 0), list);
+                    t_sq += dir;
+                }
+            }
+        }
+
+        pce = LoopSlidePce[pceIndex++];
+    }
+
     /* Loop for non slide */
     pceIndex = LoopNonSlideIndex[side];
     pce = LoopNonSlidePce[pceIndex++];

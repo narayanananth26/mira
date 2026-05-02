@@ -231,6 +231,7 @@ extern bool PieceKnight[13];
 extern bool PieceKing[13];
 extern bool PieceRookQueen[13];
 extern bool PieceBishopQueen[13];
+extern bool PieceSlides[13];
 
 /* FUNCTIONS */
 

@@ -1,0 +1,112 @@
+[
+  {
+    "file": "mira.c",
+    "arguments": [
+      "/usr/bin/gcc",
+      "mira.c",
+      "-o",
+      "mira"
+    ],
+    "directory": "/Users/harshnarayan/Desktop/Ananth/mira",
+    "output": "mira"
+  },
+  {
+    "file": "init.c",
+    "arguments": [
+      "/usr/bin/gcc",
+      "init.c",
+      "-o",
+      "mira"
+    ],
+    "directory": "/Users/harshnarayan/Desktop/Ananth/mira",
+    "output": "mira"
+  },
+  {
+    "file": "bitboards.c",
+    "arguments": [
+      "/usr/bin/gcc",
+      "bitboards.c",
+      "-o",
+      "mira"
+    ],
+    "directory": "/Users/harshnarayan/Desktop/Ananth/mira",
+    "output": "mira"
+  },
+  {
+    "file": "hashkeys.c",
+    "arguments": [
+      "/usr/bin/gcc",
+      "hashkeys.c",
+      "-o",
+      "mira"
+    ],
+    "directory": "/Users/harshnarayan/Desktop/Ananth/mira",
+    "output": "mira"
+  },
+  {
+    "file": "board.c",
+    "arguments": [
+      "/usr/bin/gcc",
+      "board.c",
+      "-o",
+      "mira"
+    ],
+    "directory": "/Users/harshnarayan/Desktop/Ananth/mira",
+    "output": "mira"
+  },
+  {
+    "file": "data.c",
+    "arguments": [
+      "/usr/bin/gcc",
+      "data.c",
+      "-o",
+      "mira"
+    ],
+    "directory": "/Users/harshnarayan/Desktop/Ananth/mira",
+    "output": "mira"
+  },
+  {
+    "file": "attack.c",
+    "arguments": [
+      "/usr/bin/gcc",
+      "attack.c",
+      "-o",
+      "mira"
+    ],
+    "directory": "/Users/harshnarayan/Desktop/Ananth/mira",
+    "output": "mira"
+  },
+  {
+    "file": "io.c",
+    "arguments": [
+      "/usr/bin/gcc",
+      "io.c",
+      "-o",
+      "mira"
+    ],
+    "directory": "/Users/harshnarayan/Desktop/Ananth/mira",
+    "output": "mira"
+  },
+  {
+    "file": "movegen.c",
+    "arguments": [
+      "/usr/bin/gcc",
+      "movegen.c",
+      "-o",
+      "mira"
+    ],
+    "directory": "/Users/harshnarayan/Desktop/Ananth/mira",
+    "output": "mira"
+  },
+  {
+    "file": "validate.c",
+    "arguments": [
+      "/usr/bin/gcc",
+      "validate.c",
+      "-o",
+      "mira"
+    ],
+    "directory": "/Users/harshnarayan/Desktop/Ananth/mira",
+    "output": "mira"
+  }
+]

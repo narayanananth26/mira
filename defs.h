@@ -149,15 +149,13 @@ typedef struct {
 
     U64 posKey;
 
-    int pceNum[13];
+    int pceNum[13]; // no. of pieces of each type on the board
     int bigPce[2];
     int majPce[2];
     int minPce[2];
     int material[2];
 
-    // piece list
-    int pList[13][10]; // type, num (max 10, when all pawns are converted)
-
+    int pList[13][10]; // pList[pieceType][nth piece of pieceType] = sq
     S_UNDO history[MAXGAMEMOVES];
 
 } S_BOARD;
@@ -250,6 +248,7 @@ extern U64 GeneratePosKey(const S_BOARD *pos);
 extern void ResetBoard(S_BOARD *pos);
 extern int ParseFen(char *fen, S_BOARD *pos);
 extern void PrintBoard(const S_BOARD *pos);
+extern void PrintBoard120(const S_BOARD *pos);
 extern void UpdateListsMaterial(S_BOARD *pos);
 extern bool CheckBoard(const S_BOARD *pos);
 

@@ -313,7 +313,7 @@ void PrintBoard(const S_BOARD *pos) {
 
     int sq, file, rank, piece;
 
-    printf("\nGame Board:\n\n");
+    printf("\nGame Board(64):\n\n");
 
     for (rank = RANK_8; rank >= RANK_1; rank--) {
         printf("%d", rank + 1);
@@ -328,6 +328,43 @@ void PrintBoard(const S_BOARD *pos) {
     printf("\n");
     for (file = FILE_A; file <= FILE_H; file++) {
         printf("%3c", 'a' + file);
+    }
+    printf("\n");
+
+    printf("side: %c\n", SideChar[pos->side]);
+
+    printf("enPas: %d\n", pos->enPas);
+
+    printf("castle: %c%c%c%c\n", pos->castlePerm & WKCA ? 'K' : '-', pos->castlePerm & WQCA ? 'Q' : '-', pos->castlePerm & BKCA ? 'k' : '-', pos->castlePerm & BQCA ? 'q' : '-');
+
+    printf("PosKey: %llX\n", pos->posKey);
+}
+
+void PrintBoard120(const S_BOARD *pos) {
+
+    int row, col, sq, piece;
+    char c;
+
+    printf("\nGameBoard(120)\n\n");
+
+    for (row = 11; row >= 0; --row) {
+        printf("%2d ", row);
+        for (col = 0; col < 10; ++col) {
+            sq = row * 10 + col;
+            piece = pos->pieces[sq];
+            if (piece == OFFBOARD) {
+                c = 'X';
+            } else {
+                c = PceChar[piece];
+            }
+            printf("%3c", c);
+        }
+        printf("\n");
+    }
+
+    printf("\n   ");
+    for (col = 0; col < 10; ++col) {
+        printf("%3d", col);
     }
     printf("\n");
 

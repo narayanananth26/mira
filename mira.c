@@ -7,39 +7,14 @@
 #define KNIGHTSKINGS "5k2/1n6/4n3/6N1/8/3N4/8/5K2 b - - 0 1"
 #define CASTLE "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"
 
-void ShowSqByAtSide(const int side, const S_BOARD *pos) {
-
-    int rank;
-    int file;
-    int sq;
-
-    printf("\n\nSquares attacked by: %c\n", SideChar[side]);
-    for (rank = RANK_8; rank >= RANK_1; rank--) {
-        for (file = FILE_A; file <= FILE_H; file++) {
-            sq = FR2SQ(file, rank);
-            if (SqAttacked(sq, side, pos) == true) {
-                printf("X");
-            } else
-                printf("-");
-        }
-        printf("\n");
-    }
-
-    printf("\n");
-}
-
 int main() {
     AllInit();
 
-    S_BOARD board[1];
+    S_BOARD pos;
+    ParseFen(PAWNMOVESB, &pos);
 
-    ParseFen(CASTLE, board);
-    PrintBoard(board);
-
-    S_MOVELIST list[1];
-
-    GenerateAllMoves(board, list);
-    PrintMoveList(list);
+    PrintBoard(&pos);
+    PrintBoard120(&pos);
 
     return 0;
 }

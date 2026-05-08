@@ -5,7 +5,7 @@ char SideChar[] = "wb-";
 char RankChar[] = "12345678";
 char FileChar[] = "abcdefgh";
 
-//                  EMPTY  P      N     B     R     Q     K     p      n     b     r     q     k
+//                   EMPTY  P      N     B     R     Q     K     p      n     b     r     q     k
 bool PieceBig[13] = {false, false, true, true, true, true, true, false, true, true, true, true, true};
 bool PieceMaj[13] = {false, false, false, false, true, true, true, false, false, false, true, true, true};
 bool PieceMin[13] = {false, false, true, true, false, false, false, false, true, true, false, false, false};

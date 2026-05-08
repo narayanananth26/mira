@@ -250,3 +250,82 @@ bool MakeMove(S_BOARD *pos, int move) {
 
     return true;
 }
+
+void TakeMove(S_BOARD *pos) {
+
+    assert(CheckBoard(pos));
+
+    pos->hisPly--;
+    pos->ply--;
+
+    assert(pos->hisPly >= 0 && pos->hisPly < MAXGAMEMOVES);
+    assert(pos->ply >= 0 && pos->ply < MAXDEPTH);
+
+    int move = pos->history[pos->hisPly].move;
+    int from = FROMSQ(move);
+    int to = TOSQ(move);
+
+    assert(SqOnBoard(from));
+    assert(SqOnBoard(to));
+
+    if (pos->enPas != NO_SQ)
+        HASH_EP;
+    HASH_CA;
+
+    pos->castlePerm = pos->history[pos->hisPly].castlePerm;
+    pos->fiftyMove = pos->history[pos->hisPly].fiftyMove;
+    pos->enPas = pos->history[pos->hisPly].enPas;
+
+    if (pos->enPas != NO_SQ)
+        HASH_EP;
+    HASH_CA;
+
+    pos->side ^= 1;
+    HASH_SIDE;
+
+    if (MFLAGEP & move) {
+        if (pos->side == WHITE) {
+            AddPiece(to - 10, pos, bP);
+        } else {
+            AddPiece(to + 10, pos, wP);
+        }
+    } else if (MFLAGCA & move) {
+        switch (to) {
+        case C1:
+            MovePiece(D1, A1, pos);
+            break;
+        case C8:
+            MovePiece(D8, A8, pos);
+            break;
+        case G1:
+            MovePiece(F1, H1, pos);
+            break;
+        case G8:
+            MovePiece(F8, H8, pos);
+            break;
+        default:
+            assert(false);
+            break;
+        }
+    }
+
+    MovePiece(to, from, pos);
+
+    if (PieceKing[pos->pieces[from]]) {
+        pos->KingSq[pos->side] = from;
+    }
+
+    int captured = CAPTURED(move);
+    if (captured != EMPTY) {
+        assert(PieceValid(captured));
+        AddPiece(to, pos, captured);
+    }
+
+    if (PROMOTED(move) != EMPTY) {
+        assert(PieceValid(PROMOTED(move)) && !PiecePawn[PROMOTED(move)]);
+        ClearPiece(from, pos);
+        AddPiece(from, pos, (PieceCol[PROMOTED(move)] == WHITE ? wP : bP));
+    }
+
+    assert(CheckBoard(pos));
+}

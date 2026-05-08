@@ -13,6 +13,7 @@ typedef unsigned long long U64;
 
 #define MAXGAMEMOVES 2048
 #define MAXPOSITIONMOVES 256
+#define MAXDEPTH 64
 
 // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
 //                 RANK_8/../RANK_1 move castlePerm enPas fiftyMove fullMoves
@@ -221,6 +222,7 @@ extern bool PieceMaj[13];
 extern bool PieceMin[13];
 extern int PieceVal[13];
 extern int PieceCol[13];
+extern bool PiecePawn[13];
 
 extern int FilesBrd[BRD_SQ_NUM];
 extern int RanksBrd[BRD_SQ_NUM];

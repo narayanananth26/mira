@@ -271,4 +271,8 @@ extern bool PieceValid(const int pce);
 // movegen.c
 extern void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
 
+// makemove.c
+extern void TakeMove(S_BOARD *pos);
+extern bool MakeMove(S_BOARD *pos, int move);
+
 #endif

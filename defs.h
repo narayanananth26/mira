@@ -4,8 +4,6 @@
 #include "stdlib.h"
 #include <stdbool.h>
 
-#define DEBUG
-
 typedef unsigned long long U64;
 
 #define NAME "Mira 1.0"

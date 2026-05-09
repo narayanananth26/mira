@@ -110,7 +110,7 @@ static void MovePiece(const int from, const int to, S_BOARD *pos) {
     assert(SideValid(col));
     assert(PieceValid(pce));
 
-#ifdef DEBUG
+#ifndef NDEBUG
     int t_PieceNum = false;
 #endif
 
@@ -130,13 +130,15 @@ static void MovePiece(const int from, const int to, S_BOARD *pos) {
     for (index = 0; index < pos->pceNum[pce]; ++index) {
         if (pos->pList[pce][index] == from) {
             pos->pList[pce][index] = to;
-#ifdef DEBUG
+#ifndef NDEBUG
             t_PieceNum = true;
 #endif
             break;
         }
     }
+#ifndef NDEBUG
     assert(t_PieceNum);
+#endif
 }
 
 bool MakeMove(S_BOARD *pos, int move) {

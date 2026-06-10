@@ -74,3 +74,34 @@ Undoes the last move. Mirrors `MakeMove` in reverse.
 8. **If a piece was captured**: put it back on the destination square.
 9. **If it was a promotion**: remove the promoted piece and put a pawn back in its place.
 10. Sanity check: the position hash should now match the one we saved before the move.
+
+## movegen.c
+
+Generates the list of pseudo-legal moves for the side to move. "Pseudo-legal" means we don't filter out moves that leave our own king in check here — that's `MakeMove`'s job (it returns `false` for illegal moves).
+
+Each move is packed into a single 25-bit integer via the `MOVE` macro: from-square (bits 0–6), to-square (7–13), captured piece (14–19), promoted piece (20–23), and flag bits (en passant, pawn-start, castling) above that.
+
+### Add helpers
+
+A small family of helpers append moves to the list. `AddQuietMove`, `AddCaptureMove`, and `AddEnPassantMove` just write the move and a zero score into the next slot and bump the count — the score field is filled in later by move ordering.
+
+The pawn helpers wrap the basics with promotion handling:
+
+- `AddWhitePawnMove` / `AddBlackPawnMove`: if the pawn is on the 7th (white) or 2nd (black) rank, emit four separate moves — one promoting to Q, R, B, N. Otherwise emit a single non-promotion move.
+- `AddWhitePawnCapMove` / `AddBlackPawnCapMove`: same idea for capture moves, recording the captured piece in each.
+
+### GenerateAllMoves(pos, list)
+
+Fills `list` with every pseudo-legal move for `pos->side`.
+
+1. Reset the list count to zero.
+2. **Pawn moves** (split by side because pawns only move forward):
+   - For each pawn, try the one-square push if the square ahead is empty. If the pawn is on its starting rank and the square two ahead is also empty, emit a two-square push with the `MFLAGPS` (pawn-start) flag.
+   - Try the two diagonal captures: each must be on-board and hold an enemy piece.
+   - If `pos->enPas` is set and matches one of the diagonals, emit an en passant move with the `MFLAGEP` flag.
+3. **Castling**: for each castling right still held, check the squares between king and rook are empty, and that the king's start square and the square it passes through are not attacked by the enemy. The destination square is checked later by `MakeMove`'s legality test. Emit with the `MFLAGCA` flag.
+4. **Sliding pieces** (bishop, rook, queen): use `LoopSlidePce` / `LoopSlideIndex` to iterate the side's sliders. For each piece, walk each direction in `PceDir` one square at a time:
+   - If we hit an enemy piece, emit a capture and stop.
+   - If we hit our own piece or run off the board, stop.
+   - Otherwise emit a quiet move and keep walking.
+5. **Non-sliding pieces** (knight, king): same idea but only one step per direction — no inner walk loop. Skip off-board targets, capture enemies, ignore friendlies, and emit quiet moves on empty squares.

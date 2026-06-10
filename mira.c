@@ -22,6 +22,8 @@ int main() {
             break;
         } else if (input[0] == 'u') { // undo
             TakeMove(&board);
+        } else if (input[0] == 't') { // test
+            PerftTest(4, &board);
         } else {
             Move = ParseMove(input, &board);
             if (Move != NOMOVE) {

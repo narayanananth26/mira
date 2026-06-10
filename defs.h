@@ -277,4 +277,7 @@ extern bool MakeMove(S_BOARD *pos, int move);
 // perft.c
 extern void PerftTest(int depth, S_BOARD *pos);
 
+// misc.c
+extern int GetTimeMs();
+
 #endif

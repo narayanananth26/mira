@@ -259,6 +259,7 @@ extern int SqAttacked(const int sq, const int side, const S_BOARD *pos);
 extern char *PrSq(const int sq);
 extern char *PrMove(const int move);
 extern void PrintMoveList(const S_MOVELIST *list);
+extern int ParseMove(char *ptrChar, S_BOARD *pos);
 
 extern bool SqOnBoard(const int sq);
 extern bool SideValid(const int side);

@@ -1,3 +1,7 @@
-# output file
+# build output
 mira
+mira.dSYM/
 
+# tooling / cache
+.cache/
+compile_commands.json

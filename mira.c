@@ -26,6 +26,8 @@ int main() {
             Move = ParseMove(input, &board);
             if (Move != NOMOVE) {
                 MakeMove(&board, Move);
+            } else {
+                printf("No move parsed: %s\n", input);
             }
         }
 

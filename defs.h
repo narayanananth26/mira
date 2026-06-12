@@ -166,6 +166,7 @@ typedef struct {
 
     int pList[13][10]; // pList[pieceType][nth piece of pieceType] = sq
     S_PVTABLE PvTable[1];
+    int PvArray[MAXDEPTH];
 
     S_UNDO history[MAXGAMEMOVES];
 
@@ -281,6 +282,7 @@ extern bool PieceValid(const int pce);
 
 // movegen.c
 extern void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
+extern int MoveExists(S_BOARD *pos, const int move);
 
 // makemove.c
 extern void TakeMove(S_BOARD *pos);

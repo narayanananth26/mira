@@ -1,4 +1,5 @@
 #include "defs.h"
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -20,4 +21,23 @@ void InitPvTable(S_PVTABLE *table) {
     table->pTable = (S_PVENTRY *)malloc(table->numEntries * sizeof(S_PVENTRY));
     ClearPvTable(table);
     printf("PvTable init complete with %d entries\n", table->numEntries);
+}
+
+void StorePvMove(const S_BOARD *pos, const int move) {
+    int index = pos->posKey % pos->PvTable->numEntries;
+    assert(index >= 0 && index <= pos->PvTable->numEntries - 1);
+
+    pos->PvTable->pTable[index].move = move;
+    pos->PvTable->pTable[index].posKey = pos->posKey;
+}
+
+int ProbePvTable(const S_BOARD *pos) {
+    int index = pos->posKey % pos->PvTable->numEntries;
+    assert(index >= 0 && index <= pos->PvTable->numEntries - 1);
+
+    if (pos->PvTable->pTable[index].posKey == pos->posKey) {
+        return pos->PvTable->pTable[index].move;
+    }
+
+    return NOMOVE;
 }

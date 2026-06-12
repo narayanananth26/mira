@@ -121,6 +121,16 @@ typedef struct {
 } S_MOVELIST;
 
 typedef struct {
+    U64 posKey;
+    int move;
+} S_PVENTRY;
+
+typedef struct {
+    S_PVENTRY *pTable;
+    int numEntries;
+} S_PVTABLE;
+
+typedef struct {
 
     int move;
     int castlePerm;
@@ -155,6 +165,8 @@ typedef struct {
     int material[2];
 
     int pList[13][10]; // pList[pieceType][nth piece of pieceType] = sq
+    S_PVTABLE PvTable[1];
+
     S_UNDO history[MAXGAMEMOVES];
 
 } S_BOARD;
@@ -279,5 +291,8 @@ extern void PerftTest(int depth, S_BOARD *pos);
 
 // misc.c
 extern int GetTimeMs();
+
+// pvtable.c
+extern void InitPvTable(S_PVTABLE *table);
 
 #endif

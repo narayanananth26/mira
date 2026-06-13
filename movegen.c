@@ -67,6 +67,11 @@ int MoveExists(S_BOARD *pos, const int move) {
 
 static void AddQuietMove(const S_BOARD *pos, int move, S_MOVELIST *list) {
 
+    assert(SqOnBoard(FROMSQ(move)));
+    assert(SqOnBoard(TOSQ(move)));
+    assert(CheckBoard(pos));
+    assert(pos->ply >= 0 && pos->ply < MAXDEPTH);
+
     list->moves[list->count].move = move;
     list->moves[list->count].score = 0;
     list->count++;
@@ -74,12 +79,22 @@ static void AddQuietMove(const S_BOARD *pos, int move, S_MOVELIST *list) {
 
 static void AddCaptureMove(const S_BOARD *pos, int move, S_MOVELIST *list) {
 
+    assert(SqOnBoard(FROMSQ(move)));
+    assert(SqOnBoard(TOSQ(move)));
+    assert(PieceValid(CAPTURED(move)));
+    assert(CheckBoard(pos));
+
     list->moves[list->count].move = move;
     list->moves[list->count].score = MvvLvaScores[CAPTURED(move)][pos->pieces[FROMSQ(move)]];
     list->count++;
 }
 
 static void AddEnPassantMove(const S_BOARD *pos, int move, S_MOVELIST *list) {
+
+    assert(SqOnBoard(FROMSQ(move)));
+    assert(SqOnBoard(TOSQ(move)));
+    assert(CheckBoard(pos));
+    assert((RanksBrd[TOSQ(move)] == RANK_6 && pos->side == WHITE) || (RanksBrd[TOSQ(move)] == RANK_3 && pos->side == BLACK));
 
     list->moves[list->count].move = move;
     list->moves[list->count].score = 105;

@@ -70,15 +70,77 @@ static void ClearForSearch(S_BOARD *pos, S_SEARCHINFO *info) {
 }
 
 // factor in horizon-effect
-static int Quiescence(int alpha, int beta, S_BOARD *pos, S_SEARCHINFO *info) { return 0; }
+static int Quiescence(int alpha, int beta, S_BOARD *pos, S_SEARCHINFO *info) {
+
+    assert(CheckBoard(pos));
+    assert(beta > alpha);
+
+    info->nodes++;
+
+    if (IsRepetition(pos) || pos->fiftyMove >= 100) {
+        return 0;
+    }
+
+    if (pos->ply > MAXDEPTH - 1) {
+        return EvaluatePosition(pos);
+    }
+
+    int Score = EvaluatePosition(pos);
+
+    assert(Score > -INFINITE && Score < INFINITE);
+
+    if (Score >= beta) {
+        return beta;
+    }
+
+    if (Score > alpha) {
+        alpha = Score;
+    }
+
+    S_MOVELIST list[1];
+    GenerateAllCaps(pos, list);
+
+    int MoveNum = 0;
+    int Legal = 0;
+    Score = -INFINITE;
+
+    for (MoveNum = 0; MoveNum < list->count; ++MoveNum) {
+
+        PickNextMove(MoveNum, list);
+
+        if (!MakeMove(pos, list->moves[MoveNum].move)) {
+            continue;
+        }
+
+        Legal++;
+        Score = -Quiescence(-beta, -alpha, pos, info);
+        TakeMove(pos);
+
+        if (info->stopped == true) {
+            return 0;
+        }
+
+        if (Score > alpha) {
+            if (Score >= beta) {
+                if (Legal == 1) {
+                    info->fhf++;
+                }
+                info->fh++;
+                return beta;
+            }
+            alpha = Score;
+        }
+    }
+
+    return alpha;
+}
 
 static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO *info, int DoNull) {
 
     assert(CheckBoard(pos));
 
-    if (depth == 0) {
-        info->nodes++;
-        return EvaluatePosition(pos);
+    if (depth <= 0) {
+        return Quiescence(alpha, beta, pos, info);
     }
 
     info->nodes++;

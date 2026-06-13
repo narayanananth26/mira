@@ -17,6 +17,8 @@ typedef unsigned long long U64;
 //                 RANK_8/../RANK_1 move castlePerm enPas fiftyMove fullMoves
 #define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
+#define INFINITE 30000
+
 // clang-format off
 enum { EMPTY, wP, wN, wB, wR, wQ, wK, bP, bN, bB, bR, bQ, bK };
 // clang-format on
@@ -259,6 +261,7 @@ extern void InitPvTable(S_PVTABLE *table);
 extern void StorePvMove(const S_BOARD *pos, const int move);
 extern int ProbePvTable(const S_BOARD *pos);
 extern void ClearPvTable(S_PVTABLE *table);
+extern int GetPvLine(const int depth, S_BOARD *pos);
 
 // evaluate.c
 extern int EvaluatePosition(const S_BOARD *pos);

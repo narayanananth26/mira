@@ -1,5 +1,6 @@
 #include "defs.h"
 #include <assert.h>
+#include <stdio.h>
 
 static void CheckUp() {
     // check if time up, or interrupt from GUI
@@ -31,7 +32,7 @@ static void ClearForSearch(S_BOARD *pos, S_SEARCHINFO *info) {
 
     for (index = 0; index < 2; ++index) {
         for (index2 = 0; index2 < MAXDEPTH; ++index2) {
-            pos->searchKillers[index][index2];
+            pos->searchKillers[index][index2] = 0;
         }
     }
 
@@ -49,5 +50,29 @@ static int Quiescence(int alpha, int beta, S_BOARD *pos, S_SEARCHINFO *info) { r
 static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO *info, int DoNull) { return 0; }
 
 void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info) {
-    // iterative deepening, search init
+
+    int bestMove = NOMOVE;
+    int bestScore = -INFINITE;
+    int currentDepth = 0;
+    int pvMoves = 0;
+    int pvNum = 0;
+
+    ClearForSearch(pos, info);
+
+    // iterative deepening
+    for (currentDepth = 1; currentDepth <= info->depth; ++currentDepth) {
+        bestScore = AlphaBeta(-INFINITE, INFINITE, currentDepth, pos, info, true);
+        pvMoves = GetPvLine(currentDepth, pos);
+        bestMove = pos->PvArray[0];
+
+        printf("\nDepth: %d\nscore: %d\nmove: %s\nnodes: %ld\n", currentDepth, bestScore, PrMove(bestMove), info->nodes);
+
+        pvMoves = GetPvLine(currentDepth, pos);
+        printf("pv");
+        for (pvNum = 0; pvNum < pvMoves; ++pvNum) {
+            printf(" %s", PrMove(pos->PvArray[pvNum]));
+        }
+
+        printf("\n");
+    }
 }

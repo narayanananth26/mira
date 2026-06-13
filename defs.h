@@ -305,6 +305,9 @@ extern bool PieceValid(const int pce);
 extern void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
 extern int MoveExists(S_BOARD *pos, const int move);
 
+// search.c
+extern void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info);
+
 // makemove.c
 extern void TakeMove(S_BOARD *pos);
 extern bool MakeMove(S_BOARD *pos, int move);
@@ -319,5 +322,8 @@ extern int GetTimeMs();
 extern void InitPvTable(S_PVTABLE *table);
 extern void StorePvMove(const S_BOARD *pos, const int move);
 extern int ProbePvTable(const S_BOARD *pos);
+
+// evaluate.c
+extern int EvaluatePosition(const S_BOARD *pos);
 
 #endif

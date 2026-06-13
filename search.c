@@ -120,10 +120,19 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
                     info->fhf++;
                 }
                 info->fh++;
+
+                if (!(list->moves[MoveNum].move & MFLAGCAP)) {
+                    pos->searchKillers[1][pos->ply] = pos->searchKillers[0][pos->ply];
+                    pos->searchKillers[0][pos->ply] = list->moves[MoveNum].move;
+                }
+
                 return beta;
             }
             alpha = Score;
             BestMove = list->moves[MoveNum].move;
+            if (!(list->moves[MoveNum].move & MFLAGCAP)) {
+                pos->searchHistory[pos->pieces[FROMSQ(BestMove)]][TOSQ(BestMove)] += depth;
+            }
         }
     }
 

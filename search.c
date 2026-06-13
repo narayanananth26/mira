@@ -47,7 +47,70 @@ static void ClearForSearch(S_BOARD *pos, S_SEARCHINFO *info) {
 // factor in horizon-effect
 static int Quiescence(int alpha, int beta, S_BOARD *pos, S_SEARCHINFO *info) { return 0; }
 
-static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO *info, int DoNull) { return 0; }
+static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO *info, int DoNull) {
+
+    assert(CheckBoard(pos));
+
+    if (depth == 0) {
+        info->nodes++;
+        return EvaluatePosition(pos);
+    }
+
+    info->nodes++;
+
+    // draw
+    if (IsRepetition(pos) || pos->fiftyMove >= 100) {
+        return 0;
+    }
+
+    if (pos->ply > MAXDEPTH - 1) {
+        return EvaluatePosition(pos);
+    }
+
+    S_MOVELIST list[1];
+    GenerateAllMoves(pos, list);
+
+    int MoveNum = 0;
+    int Legal = 0;
+    int OldAlpha = alpha;
+    int BestMove = NOMOVE;
+    int Score = -INFINITE;
+
+    for (MoveNum = 0; MoveNum < list->count; ++MoveNum) {
+
+        if (!MakeMove(pos, list->moves[MoveNum].move)) {
+            continue;
+        }
+
+        Legal++;
+        // nega-max
+        Score = -AlphaBeta(-beta, -alpha, depth - 1, pos, info, true);
+        TakeMove(pos);
+
+        if (Score > alpha) {
+            if (Score >= beta) {
+                return beta;
+            }
+            alpha = Score;
+            BestMove = list->moves[MoveNum].move;
+        }
+    }
+
+    // mate/stale-mate
+    if (Legal == 0) {
+        if (SqAttacked(pos->KingSq[pos->side], pos->side ^ 1, pos)) {
+            return -INFINITE + pos->ply;
+        } else {
+            return 0;
+        }
+    }
+
+    if (alpha != OldAlpha) {
+        StorePvMove(pos, BestMove);
+    }
+
+    return alpha;
+}
 
 void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info) {
 

@@ -170,7 +170,28 @@ typedef struct {
 
     S_UNDO history[MAXGAMEMOVES];
 
+    // move-ordering heuristics
+    int searchHistory[13][BRD_SQ_NUM]; // inc [piece][toSq], when a move beats alpha
+    int searchKillers[2][MAXDEPTH];    // store two quiet moves that cross the beta cut off
+
 } S_BOARD;
+
+typedef struct {
+
+    int starttime;
+    int stoptime;
+    int depth;
+    int depthset;
+    int timeset;
+    int movestogo;
+    int infinite;
+
+    long nodes;
+
+    int quit;
+    int stopped;
+
+} S_SEARCHINFO;
 
 /* GAME MOVES */
 /*

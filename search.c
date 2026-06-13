@@ -100,6 +100,16 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
     int OldAlpha = alpha;
     int BestMove = NOMOVE;
     int Score = -INFINITE;
+    int PvMove = ProbePvTable(pos);
+
+    if (PvMove != NOMOVE) {
+        for (MoveNum = 0; MoveNum < list->count; ++MoveNum) {
+            if (list->moves[MoveNum].move == PvMove) {
+                list->moves[MoveNum].score = 2000000;
+                break;
+            }
+        }
+    }
 
     for (MoveNum = 0; MoveNum < list->count; ++MoveNum) {
 

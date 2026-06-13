@@ -166,6 +166,8 @@ typedef struct {
 #define IsKn(p) (PieceKnight[(p)])
 #define IsKi(p) (PieceKing[(p)])
 
+#define MIRROR64(sq) (Mirror64[(sq)])
+
 /* GLOBALS */
 
 extern int Sq120ToSq64[BRD_SQ_NUM];
@@ -198,6 +200,7 @@ extern bool PieceRookQueen[13];
 extern bool PieceBishopQueen[13];
 extern bool PieceSlides[13];
 
+extern int Mirror64[64];
 /* FUNCTIONS */
 
 // init.c

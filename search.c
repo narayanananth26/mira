@@ -42,6 +42,8 @@ static void ClearForSearch(S_BOARD *pos, S_SEARCHINFO *info) {
     info->starttime = GetTimeMs();
     info->stopped = 0;
     info->nodes = 0;
+    info->fh = 0;
+    info->fhf = 0;
 }
 
 // factor in horizon-effect
@@ -89,6 +91,10 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
 
         if (Score > alpha) {
             if (Score >= beta) {
+                if (Legal == 1) {
+                    info->fhf++;
+                }
+                info->fh++;
                 return beta;
             }
             alpha = Score;
@@ -137,5 +143,6 @@ void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info) {
         }
 
         printf("\n");
+        printf("Ordering: %.2f\n", (info->fhf / info->fh));
     }
 }

@@ -126,6 +126,9 @@ typedef struct {
     int quit;
     int stopped;
 
+    float fh;  // fail high
+    float fhf; // fail high first
+
 } S_SEARCHINFO;
 
 /* GAME MOVES */

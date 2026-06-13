@@ -10,6 +10,8 @@ int main() {
     AllInit();
 
     S_BOARD board[1];
+    InitPvTable(board->PvTable);
+
     S_SEARCHINFO info[1];
 
     ParseFen(MATE3FEN, board);
@@ -41,6 +43,8 @@ int main() {
 
         fflush(stdin);
     }
+
+    free(board->PvTable->pTable);
 
     return 0;
 }

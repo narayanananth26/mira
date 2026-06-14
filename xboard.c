@@ -1,6 +1,7 @@
 #include "defs.h"
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
 
 int ThreeFoldRep(const S_BOARD *pos) {
 
@@ -93,4 +94,100 @@ int checkresult(S_BOARD *pos) {
         return true;
     }
     return false;
+}
+
+void XBoardLoop(S_BOARD *pos, S_SEARCHINFO *info) {
+
+    setbuf(stdin, NULL);
+    setbuf(stdout, NULL);
+
+    int depth = -1, movestogo[2] = {30, 30}, movetime = -1;
+    int time = -1, inc = 0;
+    int engineSide = BOTH;
+    int timeLeft;
+    int sec;
+    int mps;
+    int move = NOMOVE;
+    char inBuf[80], command[80];
+
+    while (true) {
+
+        fflush(stdout);
+
+        if (pos->side == engineSide && checkresult(pos) == false) {
+            // think
+        }
+
+        fflush(stdout);
+
+        memset(&inBuf[0], 0, sizeof(inBuf));
+        fflush(stdout);
+        if (!fgets(inBuf, 80, stdin))
+            continue;
+
+        sscanf(inBuf, "%s", command);
+
+        printf("command seen:%s\n", inBuf);
+
+        if (!strcmp(command, "quit")) {
+            info->quit = true;
+            break;
+        }
+
+        if (!strcmp(command, "force")) {
+            engineSide = BOTH;
+            continue;
+        }
+
+        if (!strcmp(command, "protover")) {
+            printf("feature ping=1 setboard=1 colors=0 usermove=1\n");
+            printf("feature done=1\n");
+            continue;
+        }
+
+        if (!strcmp(command, "sd")) {
+            sscanf(inBuf, "sd %d", &depth);
+            printf("DEBUG depth:%d\n", depth);
+            continue;
+        }
+
+        if (!strcmp(command, "st")) {
+            sscanf(inBuf, "st %d", &movetime);
+            printf("DEBUG movetime:%d\n", movetime);
+            continue;
+        }
+
+        if (!strcmp(command, "ping")) {
+            printf("pong%s\n", inBuf + 4);
+            continue;
+        }
+
+        if (!strcmp(command, "new")) {
+            engineSide = BLACK;
+            ParseFen(START_FEN, pos);
+            depth = -1;
+            time = -1;
+            continue;
+        }
+
+        if (!strcmp(command, "setboard")) {
+            engineSide = BOTH;
+            ParseFen(inBuf + 9, pos);
+            continue;
+        }
+
+        if (!strcmp(command, "go")) {
+            engineSide = pos->side;
+            continue;
+        }
+
+        if (!strcmp(command, "usermove")) {
+            movestogo[pos->side]--;
+            move = ParseMove(inBuf + 9, pos);
+            if (move == NOMOVE)
+                continue;
+            MakeMove(pos, move);
+            pos->ply = 0;
+        }
+    }
 }

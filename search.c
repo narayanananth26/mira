@@ -65,7 +65,6 @@ static void ClearForSearch(S_BOARD *pos, S_SEARCHINFO *info) {
     ClearPvTable(pos->PvTable);
     pos->ply = 0;
 
-    info->starttime = GetTimeMs();
     info->stopped = 0;
     info->nodes = 0;
     info->fh = 0;
@@ -270,7 +269,7 @@ void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info) {
         }
 
         printf("\n");
-        printf("Ordering: %.2f\n", (info->fhf / info->fh));
+        // printf("Ordering: %.2f\n", (info->fhf / info->fh));
     }
 
     // info score cp 13 depth 1 nodes 13 time 15 pv f1b5

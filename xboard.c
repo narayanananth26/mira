@@ -98,6 +98,8 @@ int checkresult(S_BOARD *pos) {
 
 void XBoardLoop(S_BOARD *pos, S_SEARCHINFO *info) {
 
+    info->GAME_MODE = XBOARDMODE;
+    info->POST_THINKING = true;
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
 
@@ -110,12 +112,39 @@ void XBoardLoop(S_BOARD *pos, S_SEARCHINFO *info) {
     int move = NOMOVE;
     char inBuf[80], command[80];
 
+    engineSide = BLACK;
+    ParseFen(START_FEN, pos);
+    depth = -1;
+    time = -1;
+
     while (true) {
 
         fflush(stdout);
 
         if (pos->side == engineSide && checkresult(pos) == false) {
-            // think
+            info->starttime = GetTimeMs();
+            info->depth = depth;
+
+            if (time != -1) {
+                info->timeset = true;
+                time /= movestogo[pos->side];
+                time -= 50;
+                info->stoptime = info->starttime + time + inc;
+            }
+
+            if (depth == -1 || depth > MAXDEPTH) {
+                info->depth = MAXDEPTH;
+            }
+
+            printf("time:%d start:%d stop:%d depth:%d timeset:%d movestogo:%d mps:%d\n", time, info->starttime, info->stoptime, info->depth, info->timeset, movestogo[pos->side], mps);
+            SearchPosition(pos, info);
+
+            if (mps != 0) {
+                movestogo[pos->side ^ 1]--;
+                if (movestogo[pos->side ^ 1] < 1) {
+                    movestogo[pos->side ^ 1] = mps;
+                }
+            }
         }
 
         fflush(stdout);
@@ -154,6 +183,33 @@ void XBoardLoop(S_BOARD *pos, S_SEARCHINFO *info) {
         if (!strcmp(command, "st")) {
             sscanf(inBuf, "st %d", &movetime);
             printf("DEBUG movetime:%d\n", movetime);
+            continue;
+        }
+
+        if (!strcmp(command, "time")) {
+            sscanf(inBuf, "time %d", &time);
+            time *= 10;
+            printf("DEBUG time:%d\n", time);
+            continue;
+        }
+
+        if (!strcmp(command, "level")) {
+            sec = 0;
+            movetime = -1;
+            if (sscanf(inBuf, "level %d %d %d", &mps, &timeLeft, &inc) != 3) {
+                sscanf(inBuf, "level %d %d:%d %d", &mps, &timeLeft, &sec, &inc);
+                printf("DEBUG level with :\n");
+            } else {
+                printf("DEBUG level without :\n");
+            }
+            timeLeft *= 60000;
+            timeLeft += sec * 1000;
+            movestogo[0] = movestogo[1] = 30;
+            if (mps != 0) {
+                movestogo[0] = movestogo[1] = mps;
+            }
+            time = -1;
+            printf("DEBUG level timeLeft:%d movesToGo:%d inc:%d mps%d\n", timeLeft, movestogo[0], inc, mps);
             continue;
         }
 

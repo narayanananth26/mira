@@ -29,6 +29,8 @@ enum { RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8, RANK_NONE
 
 enum { WHITE, BLACK, BOTH };
 
+enum { UCIMODE, XBOARDMODE, CONSOLEMODE };
+
 // clang-format off
 enum {
     A1 = 21, B1, C1, D1, E1, F1, G1, H1,
@@ -128,6 +130,9 @@ typedef struct {
 
     float fh;  // fail high
     float fhf; // fail high first
+
+    int GAME_MODE;
+    int POST_THINKING;
 
 } S_SEARCHINFO;
 

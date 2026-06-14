@@ -279,4 +279,8 @@ extern int EvaluatePosition(const S_BOARD *pos);
 // uci.c
 extern void UciLoop(S_BOARD *pos, S_SEARCHINFO *info);
 
+// xboard.c
+extern void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info);
+extern void XBoardLoop(S_BOARD *pos, S_SEARCHINFO *info);
+
 #endif

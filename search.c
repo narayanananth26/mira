@@ -272,6 +272,5 @@ void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info) {
         // printf("Ordering: %.2f\n", (info->fhf / info->fh));
     }
 
-    // info score cp 13 depth 1 nodes 13 time 15 pv f1b5
-    printf("Best move - %s\n", PrMove(bestMove));
+    printf("bestmove %s\n", PrMove(bestMove));
 }

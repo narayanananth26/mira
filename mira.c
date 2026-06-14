@@ -34,6 +34,8 @@ int main() {
             PerftTest(4, board);
         } else if (input[0] == 's') {
             info->depth = 5;
+            info->starttime = GetTimeMs();
+            info->stoptime = GetTimeMs() + 200000;
             SearchPosition(board, info);
         } else {
             Move = ParseMove(input, board);

@@ -261,7 +261,7 @@ void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info) {
         pvMoves = GetPvLine(currentDepth, pos);
         bestMove = pos->PvArray[0];
 
-        printf("\nDepth: %d\nscore: %d\nmove: %s\nnodes: %ld\n", currentDepth, bestScore, PrMove(bestMove), info->nodes);
+        printf("info score cp %d depth %d nodes %ld time %d ", bestScore, currentDepth, info->nodes, GetTimeMs() - info->starttime);
 
         pvMoves = GetPvLine(currentDepth, pos);
         printf("pv");
@@ -272,4 +272,7 @@ void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info) {
         printf("\n");
         printf("Ordering: %.2f\n", (info->fhf / info->fh));
     }
+
+    // info score cp 13 depth 1 nodes 13 time 15 pv f1b5
+    printf("Best move - %s\n", PrMove(bestMove));
 }

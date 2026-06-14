@@ -2,8 +2,11 @@
 #include <assert.h>
 #include <stdio.h>
 
-static void CheckUp() {
-    // check if time up, or interrupt from GUI
+static void CheckUp(S_SEARCHINFO *info) {
+    // .. check if time up, or interrupt from GUI
+    if (info->timeset == true && GetTimeMs() > info->stoptime) {
+        info->stopped = true;
+    }
 }
 
 static void PickNextMove(int moveNum, S_MOVELIST *list) {
@@ -75,6 +78,11 @@ static int Quiescence(int alpha, int beta, S_BOARD *pos, S_SEARCHINFO *info) {
     assert(CheckBoard(pos));
     assert(beta > alpha);
 
+    // runs once every 2048 nodes
+    if ((info->nodes & 2047) == 0) {
+        CheckUp(info);
+    }
+
     info->nodes++;
 
     if (IsRepetition(pos) || pos->fiftyMove >= 100) {
@@ -143,6 +151,10 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
         return Quiescence(alpha, beta, pos, info);
     }
 
+    if ((info->nodes & 2047) == 0) {
+        CheckUp(info);
+    }
+
     info->nodes++;
 
     // draw
@@ -185,6 +197,10 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
         // nega-max
         Score = -AlphaBeta(-beta, -alpha, depth - 1, pos, info, true);
         TakeMove(pos);
+
+        if (info->stopped == true) {
+            return 0;
+        }
 
         if (Score > alpha) {
             if (Score >= beta) {
@@ -237,6 +253,11 @@ void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info) {
     // iterative deepening
     for (currentDepth = 1; currentDepth <= info->depth; ++currentDepth) {
         bestScore = AlphaBeta(-INFINITE, INFINITE, currentDepth, pos, info, true);
+
+        if (info->stopped == true) {
+            break;
+        }
+
         pvMoves = GetPvLine(currentDepth, pos);
         bestMove = pos->PvArray[0];
 

@@ -85,7 +85,7 @@ static int Quiescence(int alpha, int beta, S_BOARD *pos, S_SEARCHINFO *info) {
 
     info->nodes++;
 
-    if (IsRepetition(pos) || pos->fiftyMove >= 100) {
+    if ((IsRepetition(pos) || pos->fiftyMove >= 100) && pos->ply) {
         return 0;
     }
 

@@ -12,7 +12,14 @@
 int main() {
 
     AllInit();
-    UciLoop();
+
+    S_BOARD pos[1];
+    S_SEARCHINFO info[1];
+    InitPvTable(pos->PvTable);
+
+    UciLoop(pos, info);
+
+    free(pos->PvTable->pTable);
 
     return 0;
 }

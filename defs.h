@@ -272,6 +272,6 @@ extern int GetPvLine(const int depth, S_BOARD *pos);
 extern int EvaluatePosition(const S_BOARD *pos);
 
 // uci.c
-extern void UciLoop();
+extern void UciLoop(S_BOARD *pos, S_SEARCHINFO *info);
 
 #endif

@@ -106,7 +106,7 @@ void ParsePosition(char *lineIn, S_BOARD *pos) {
     PrintBoard(pos);
 }
 
-void UciLoop() {
+void UciLoop(S_BOARD *pos, S_SEARCHINFO *info) {
 
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
@@ -115,10 +115,6 @@ void UciLoop() {
     printf("id name %s\n", NAME);
     printf("id author ananth\n");
     printf("uciok\n");
-
-    S_BOARD pos[1];
-    S_SEARCHINFO info[1];
-    InitPvTable(pos->PvTable);
 
     while (true) {
         memset(&line[0], 0, sizeof(line));
@@ -150,6 +146,4 @@ void UciLoop() {
         if (info->quit)
             break;
     }
-
-    free(pos->PvTable->pTable);
 }

@@ -10,46 +10,9 @@
 #define ORDERINGFEN "r1b1k2r/ppppnppp/2n2q2/2b5/3NP3/2P1B3/PP3PPP/RN1QKB1R w KQkq - 0 1"
 
 int main() {
+
     AllInit();
-
-    S_BOARD board[1];
-    InitPvTable(board->PvTable);
-
-    S_SEARCHINFO info[1];
-
-    ParseFen(ORDERINGFEN, board);
-
-    char input[6];
-    int Move = NOMOVE;
-    while (true) {
-        PrintBoard(board);
-        printf("Enter a move: ");
-        fgets(input, 6, stdin);
-
-        if (input[0] == 'q') { // quit
-            break;
-        } else if (input[0] == 'u') { // undo
-            TakeMove(board);
-        } else if (input[0] == 't') { // test
-            PerftTest(4, board);
-        } else if (input[0] == 's') {
-            info->depth = 5;
-            info->starttime = GetTimeMs();
-            info->stoptime = GetTimeMs() + 200000;
-            SearchPosition(board, info);
-        } else {
-            Move = ParseMove(input, board);
-            if (Move != NOMOVE) {
-                MakeMove(board, Move);
-            } else {
-                printf("No move parsed: %s\n", input);
-            }
-        }
-
-        fflush(stdin);
-    }
-
-    free(board->PvTable->pTable);
+    UciLoop();
 
     return 0;
 }

@@ -5,7 +5,45 @@
 #define INPUTBUFFER 400 * 6
 
 void ParseGo(char *line, S_SEARCHINFO *info, S_BOARD *pos) {}
-void ParsePosition(char *lineIn, S_BOARD *pos) {}
+
+// position fen fenstr
+// position startpos
+// ... moves e2e4 e7e5 b7b8q
+void ParsePosition(char *lineIn, S_BOARD *pos) {
+
+    lineIn += 9;
+    char *ptrChar = lineIn;
+
+    if (strncmp(lineIn, "startpos", 8) == 0) {
+        ParseFen(START_FEN, pos);
+    } else {
+        ptrChar = strstr(lineIn, "fen");
+        if (ptrChar == NULL) {
+            ParseFen(START_FEN, pos);
+        } else {
+            ptrChar += 4;
+            ParseFen(ptrChar, pos);
+        }
+    }
+
+    ptrChar = strstr(lineIn, "moves");
+    int move;
+
+    if (ptrChar != NULL) {
+        ptrChar += 6;
+        while (*ptrChar) {
+            move = ParseMove(ptrChar, pos);
+            if (move == NOMOVE)
+                break;
+            MakeMove(pos, move);
+            pos->ply = 0;
+            while (*ptrChar && *ptrChar != ' ')
+                ptrChar++;
+            ptrChar++;
+        }
+    }
+    PrintBoard(pos);
+}
 
 void UciLoop() {
 
@@ -51,4 +89,6 @@ void UciLoop() {
         if (info->quit)
             break;
     }
+
+    free(pos->PvTable->pTable);
 }

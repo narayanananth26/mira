@@ -7,6 +7,7 @@ const int RookOpenFile = 10;
 const int RookSemiOpenFile = 5;
 const int QueenOpenFile = 5;
 const int QueenSemiOpenFile = 3;
+const int BishopPair = 30;
 
 // clang-format off
 const int PawnTable[64] = {
@@ -274,6 +275,11 @@ int EvaluatePosition(const S_BOARD *pos) {
     } else {
         score -= KingO[MIRROR64(SQ64(sq))];
     }
+
+    if (pos->pceNum[wB] >= 2)
+        score += BishopPair;
+    if (pos->pceNum[bB] >= 2)
+        score -= BishopPair;
 
     if (pos->side == WHITE) {
         return score;

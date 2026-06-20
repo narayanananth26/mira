@@ -80,7 +80,7 @@ int EvaluatePosition(const S_BOARD *pos) {
     for (pceNum = 0; pceNum < pos->pceNum[pce]; ++pceNum) {
         sq = pos->pList[pce][pceNum];
         assert(SqOnBoard(sq));
-        score += PawnTable[Mirror64[SQ64(sq)]];
+        score += PawnTable[SQ64(sq)];
     }
 
     pce = bP;

@@ -115,6 +115,8 @@ int MaterialDraw(const S_BOARD *pos) {
     return false;
 }
 
+#define ENDGAME_MAT (1 * PieceVal[wR] + 2 * PieceVal[wN] + 2 * PieceVal[wP] + PieceVal[wK])
+
 int EvaluatePosition(const S_BOARD *pos) {
 
     assert(CheckBoard(pos));
@@ -248,6 +250,29 @@ int EvaluatePosition(const S_BOARD *pos) {
         } else if (!(pos->pawns[BLACK] & FileBBMask[FilesBrd[sq]])) {
             score -= QueenSemiOpenFile;
         }
+    }
+
+    // 8/p6k/6p1/5p2/P4K2/8/5pB1/8 b - - 2 62
+    pce = wK;
+    sq = pos->pList[pce][0];
+    assert(SqOnBoard(sq));
+    assert(SQ64(sq) >= 0 && SQ64(sq) <= 63);
+
+    if ((pos->material[BLACK] <= ENDGAME_MAT)) {
+        score += KingE[SQ64(sq)];
+    } else {
+        score += KingO[SQ64(sq)];
+    }
+
+    pce = bK;
+    sq = pos->pList[pce][0];
+    assert(SqOnBoard(sq));
+    assert(MIRROR64(SQ64(sq)) >= 0 && MIRROR64(SQ64(sq)) <= 63);
+
+    if ((pos->material[WHITE] <= ENDGAME_MAT)) {
+        score -= KingE[MIRROR64(SQ64(sq))];
+    } else {
+        score -= KingO[MIRROR64(SQ64(sq))];
     }
 
     if (pos->side == WHITE) {

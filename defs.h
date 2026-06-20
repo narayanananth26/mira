@@ -18,6 +18,7 @@ typedef unsigned long long U64;
 #define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 #define INFINITE 30000
+#define ISMATE (INFINITE - MAXDEPTH)
 
 // clang-format off
 enum { EMPTY, wP, wN, wB, wR, wQ, wK, bP, bN, bB, bR, bQ, bK };
@@ -130,6 +131,7 @@ typedef struct {
 
     float fh;  // fail high
     float fhf; // fail high first
+    int nullCut;
 
     int GAME_MODE;
     int POST_THINKING;
@@ -270,6 +272,8 @@ extern void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info);
 // makemove.c
 extern void TakeMove(S_BOARD *pos);
 extern bool MakeMove(S_BOARD *pos, int move);
+extern void MakeNullMove(S_BOARD *pos);
+extern void TakeNullMove(S_BOARD *pos);
 
 // perft.c
 extern void PerftTest(int depth, S_BOARD *pos);

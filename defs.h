@@ -211,6 +211,7 @@ extern bool PieceBishopQueen[13];
 extern bool PieceSlides[13];
 
 extern int Mirror64[64];
+extern U64 IsolatedMask[64];
 /* FUNCTIONS */
 
 // init.c

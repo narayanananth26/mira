@@ -1,6 +1,8 @@
 #include "defs.h"
 #include <assert.h>
 
+const int PawnIsolated = -10;
+const int PawnPassed[8] = {0, 5, 10, 20, 35, 60, 100, 200};
 // clang-format off
 const int PawnTable[64] = {
 	 0,   0,   0,   0,   0,   0,   0,   0,
@@ -81,6 +83,16 @@ int EvaluatePosition(const S_BOARD *pos) {
         sq = pos->pList[pce][pceNum];
         assert(SqOnBoard(sq));
         score += PawnTable[SQ64(sq)];
+
+        if ((IsolatedMask[SQ64(sq)] & pos->pawns[WHITE]) == 0) {
+            // printf("wP Iso:%s\n",PrSq(sq));
+            score += PawnIsolated;
+        }
+
+        if ((WhitePassedMask[SQ64(sq)] & pos->pawns[BLACK]) == 0) {
+            // printf("wP Passed:%s\n",PrSq(sq));
+            score += PawnPassed[RanksBrd[sq]];
+        }
     }
 
     pce = bP;
@@ -88,6 +100,16 @@ int EvaluatePosition(const S_BOARD *pos) {
         sq = pos->pList[pce][pceNum];
         assert(SqOnBoard(sq));
         score -= PawnTable[Mirror64[SQ64(sq)]];
+
+        if ((IsolatedMask[SQ64(sq)] & pos->pawns[BLACK]) == 0) {
+            // printf("bP Iso:%s\n",PrSq(sq));
+            score -= PawnIsolated;
+        }
+
+        if ((BlackPassedMask[SQ64(sq)] & pos->pawns[WHITE]) == 0) {
+            // printf("bP Passed:%s\n",PrSq(sq));
+            score -= PawnPassed[7 - RanksBrd[sq]];
+        }
     }
 
     pce = wN;

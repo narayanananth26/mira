@@ -312,13 +312,19 @@ void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info) {
         }
 
         if (!strcmp(command, "mirror")) {
-            engineSide = BOTH;
+            PrintBoard(pos);
+            printf("Eval:%d", EvaluatePosition(pos));
+            MirrorBoard(pos);
+            PrintBoard(pos);
+            printf("Eval:%d", EvaluatePosition(pos));
+            MirrorBoard(pos);
             continue;
         }
 
         if (!strcmp(command, "eval")) {
             PrintBoard(pos);
             printf("Eval:%d", EvaluatePosition(pos));
+            MirrorBoard(pos);
             PrintBoard(pos);
             printf("Eval:%d", EvaluatePosition(pos));
             continue;

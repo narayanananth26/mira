@@ -231,6 +231,7 @@ extern void PrintBoard(const S_BOARD *pos);
 extern void PrintBoard120(const S_BOARD *pos);
 extern void UpdateListsMaterial(S_BOARD *pos);
 extern bool CheckBoard(const S_BOARD *pos);
+extern void MirrorBoard(S_BOARD *pos);
 
 // attack.c
 extern bool SqAttacked(const int sq, const int side, const S_BOARD *pos);

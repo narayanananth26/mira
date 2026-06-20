@@ -233,7 +233,7 @@ extern void UpdateListsMaterial(S_BOARD *pos);
 extern bool CheckBoard(const S_BOARD *pos);
 
 // attack.c
-extern int SqAttacked(const int sq, const int side, const S_BOARD *pos);
+extern bool SqAttacked(const int sq, const int side, const S_BOARD *pos);
 
 // io.c
 extern char *PrSq(const int sq);

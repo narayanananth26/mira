@@ -44,7 +44,7 @@ int main() {
             if (info->quit == true)
                 break;
             continue;
-        } else if (!strncmp(line, "quit", 4)) {
+        } else if ((!strncmp(line, "quit", 4)) || (!strncmp(line, "exit", 4)) || (!strncmp(line, "q", 1))) {
             break;
         }
     }

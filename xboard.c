@@ -158,7 +158,7 @@ void XBoardLoop(S_BOARD *pos, S_SEARCHINFO *info) {
 
         printf("command seen:%s\n", inBuf);
 
-        if (!strcmp(command, "quit")) {
+        if (!strcmp(command, "quit") || !strcmp(command, "exit") || !strcmp(command, "q")) {
             info->quit = true;
             break;
         }
@@ -332,7 +332,7 @@ void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info) {
             continue;
         }
 
-        if (!strcmp(command, "quit")) {
+        if (!strcmp(command, "quit") || !strcmp(command, "exit") || !strcmp(command, "q")) {
             info->quit = true;
             break;
         }

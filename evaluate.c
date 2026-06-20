@@ -117,7 +117,7 @@ int MaterialDraw(const S_BOARD *pos) {
 
 int EvaluatePosition(const S_BOARD *pos) {
 
-	assert(CheckBoard(pos));
+    assert(CheckBoard(pos));
 
     int pce;
     int pceNum;

@@ -16,7 +16,7 @@ int main() {
 
     S_BOARD pos[1];
     S_SEARCHINFO info[1];
-    InitPvTable(pos->PvTable);
+    InitHashTable(pos->HashTable, 64);
 
     printf("Welcome to Mira! Type 'mira' for console mode...\n");
 
@@ -49,7 +49,7 @@ int main() {
         }
     }
 
-    free(pos->PvTable->pTable);
+    free(pos->HashTable->pTable);
 
     return 0;
 }

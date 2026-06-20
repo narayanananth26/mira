@@ -58,15 +58,24 @@ typedef struct {
     int count;
 } S_MOVELIST;
 
+enum { HFNONE, HFALPHA, HFBETA, HFEXACT };
+
 typedef struct {
     U64 posKey;
     int move;
-} S_PVENTRY;
+    int score;
+    int depth;
+    int flags;
+} S_HASHENTRY;
 
 typedef struct {
-    S_PVENTRY *pTable;
+    S_HASHENTRY *pTable;
     int numEntries;
-} S_PVTABLE;
+    int newWrite;
+    int overWrite;
+    int hit;
+    int cut;
+} S_HASHTABLE;
 
 typedef struct {
 
@@ -103,7 +112,8 @@ typedef struct {
     int material[2];
 
     int pList[13][10]; // pList[pieceType][nth piece of pieceType] = sq
-    S_PVTABLE PvTable[1];
+    S_HASHTABLE HashTable[1];
+
     int PvArray[MAXDEPTH];
 
     S_UNDO history[MAXGAMEMOVES];
@@ -282,11 +292,12 @@ extern void PerftTest(int depth, S_BOARD *pos);
 extern int GetTimeMs();
 
 // pvtable.c
-extern void InitPvTable(S_PVTABLE *table);
-extern void StorePvMove(const S_BOARD *pos, const int move);
-extern int ProbePvTable(const S_BOARD *pos);
-extern void ClearPvTable(S_PVTABLE *table);
+extern void InitHashTable(S_HASHTABLE *table, const int MB);
+extern void StoreHashEntry(S_BOARD *pos, const int move, int score, const int flags, const int depth);
+extern int ProbeHashEntry(S_BOARD *pos, int *move, int *score, int alpha, int beta, int depth);
+extern int ProbePvMove(const S_BOARD *pos);
 extern int GetPvLine(const int depth, S_BOARD *pos);
+extern void ClearHashTable(S_HASHTABLE *table);
 
 // evaluate.c
 extern int EvaluatePosition(const S_BOARD *pos);

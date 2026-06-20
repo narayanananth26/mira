@@ -24,6 +24,9 @@ void MirrorEvalTest(S_BOARD *pos) {
         return;
     } else {
         while (fgets(lineIn, 1024, file) != NULL) {
+            if (lineIn[0] == '\n' || lineIn[0] == '\0') {
+                continue;
+            }
             ParseFen(lineIn, pos);
             positions++;
             ev1 = EvaluatePosition(pos);
@@ -47,5 +50,7 @@ void MirrorEvalTest(S_BOARD *pos) {
 
             memset(&lineIn[0], 0, sizeof(lineIn));
         }
+        printf("Mirror test passed: %d positions\n", positions);
+        fclose(file);
     }
 }

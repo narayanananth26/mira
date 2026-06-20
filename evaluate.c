@@ -76,12 +76,57 @@ const int KingO[64] = {
 };
 // clang-format on
 
+// sjeng 11.2 - https://github.com/gcp/sjeng/releases/tag/v11.2
+// 8/6R1/2k5/6P1/8/8/4nP2/6K1 w - - 1 41
+
+int MaterialDraw(const S_BOARD *pos) {
+
+    assert(CheckBoard(pos));
+
+    if (!pos->pceNum[wR] && !pos->pceNum[bR] && !pos->pceNum[wQ] && !pos->pceNum[bQ]) {
+        if (!pos->pceNum[bB] && !pos->pceNum[wB]) {
+            if (pos->pceNum[wN] < 3 && pos->pceNum[bN] < 3) {
+                return true;
+            }
+        } else if (!pos->pceNum[wN] && !pos->pceNum[bN]) {
+            if (abs(pos->pceNum[wB] - pos->pceNum[bB]) < 2) {
+                return true;
+            }
+        } else if ((pos->pceNum[wN] < 3 && !pos->pceNum[wB]) || (pos->pceNum[wB] == 1 && !pos->pceNum[wN])) {
+            if ((pos->pceNum[bN] < 3 && !pos->pceNum[bB]) || (pos->pceNum[bB] == 1 && !pos->pceNum[bN])) {
+                return true;
+            }
+        }
+    } else if (!pos->pceNum[wQ] && !pos->pceNum[bQ]) {
+        if (pos->pceNum[wR] == 1 && pos->pceNum[bR] == 1) {
+            if ((pos->pceNum[wN] + pos->pceNum[wB]) < 2 && (pos->pceNum[bN] + pos->pceNum[bB]) < 2) {
+                return true;
+            }
+        } else if (pos->pceNum[wR] == 1 && !pos->pceNum[bR]) {
+            if ((pos->pceNum[wN] + pos->pceNum[wB] == 0) && (((pos->pceNum[bN] + pos->pceNum[bB]) == 1) || ((pos->pceNum[bN] + pos->pceNum[bB]) == 2))) {
+                return true;
+            }
+        } else if (pos->pceNum[bR] == 1 && !pos->pceNum[wR]) {
+            if ((pos->pceNum[bN] + pos->pceNum[bB] == 0) && (((pos->pceNum[wN] + pos->pceNum[wB]) == 1) || ((pos->pceNum[wN] + pos->pceNum[wB]) == 2))) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 int EvaluatePosition(const S_BOARD *pos) {
+
+	assert(CheckBoard(pos));
 
     int pce;
     int pceNum;
     int sq;
     int score = pos->material[WHITE] - pos->material[BLACK];
+
+    if (!pos->pceNum[wP] && !pos->pceNum[bP] && MaterialDraw(pos) == true) {
+        return 0;
+    }
 
     pce = wP;
     for (pceNum = 0; pceNum < pos->pceNum[pce]; ++pceNum) {

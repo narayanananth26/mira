@@ -3,6 +3,11 @@
 
 const int PawnIsolated = -10;
 const int PawnPassed[8] = {0, 5, 10, 20, 35, 60, 100, 200};
+const int RookOpenFile = 10;
+const int RookSemiOpenFile = 5;
+const int QueenOpenFile = 5;
+const int QueenSemiOpenFile = 3;
+
 // clang-format off
 const int PawnTable[64] = {
 	 0,   0,   0,   0,   0,   0,   0,   0,
@@ -150,6 +155,14 @@ int EvaluatePosition(const S_BOARD *pos) {
         assert(SqOnBoard(sq));
         assert(SQ64(sq) >= 0 && SQ64(sq) <= 63);
         score += RookTable[SQ64(sq)];
+
+        assert(FileRankValid(FilesBrd[sq]));
+
+        if (!(pos->pawns[BOTH] & FileBBMask[FilesBrd[sq]])) {
+            score += RookOpenFile;
+        } else if (!(pos->pawns[WHITE] & FileBBMask[FilesBrd[sq]])) {
+            score += RookSemiOpenFile;
+        }
     }
 
     pce = bR;
@@ -158,6 +171,38 @@ int EvaluatePosition(const S_BOARD *pos) {
         assert(SqOnBoard(sq));
         assert(MIRROR64(SQ64(sq)) >= 0 && MIRROR64(SQ64(sq)) <= 63);
         score -= RookTable[MIRROR64(SQ64(sq))];
+        assert(FileRankValid(FilesBrd[sq]));
+        if (!(pos->pawns[BOTH] & FileBBMask[FilesBrd[sq]])) {
+            score -= RookOpenFile;
+        } else if (!(pos->pawns[BLACK] & FileBBMask[FilesBrd[sq]])) {
+            score -= RookSemiOpenFile;
+        }
+    }
+
+    pce = wQ;
+    for (pceNum = 0; pceNum < pos->pceNum[pce]; ++pceNum) {
+        sq = pos->pList[pce][pceNum];
+        assert(SqOnBoard(sq));
+        assert(SQ64(sq) >= 0 && SQ64(sq) <= 63);
+        assert(FileRankValid(FilesBrd[sq]));
+        if (!(pos->pawns[BOTH] & FileBBMask[FilesBrd[sq]])) {
+            score += QueenOpenFile;
+        } else if (!(pos->pawns[WHITE] & FileBBMask[FilesBrd[sq]])) {
+            score += QueenSemiOpenFile;
+        }
+    }
+
+    pce = bQ;
+    for (pceNum = 0; pceNum < pos->pceNum[pce]; ++pceNum) {
+        sq = pos->pList[pce][pceNum];
+        assert(SqOnBoard(sq));
+        assert(SQ64(sq) >= 0 && SQ64(sq) <= 63);
+        assert(FileRankValid(FilesBrd[sq]));
+        if (!(pos->pawns[BOTH] & FileBBMask[FilesBrd[sq]])) {
+            score -= QueenOpenFile;
+        } else if (!(pos->pawns[BLACK] & FileBBMask[FilesBrd[sq]])) {
+            score -= QueenSemiOpenFile;
+        }
     }
 
     if (pos->side == WHITE) {

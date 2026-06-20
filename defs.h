@@ -242,11 +242,13 @@ extern char *PrMove(const int move);
 extern void PrintMoveList(const S_MOVELIST *list);
 extern int ParseMove(char *ptrChar, S_BOARD *pos);
 
+// validate.c
 extern bool SqOnBoard(const int sq);
 extern bool SideValid(const int side);
 extern bool FileRankValid(const int fr);
 extern bool PieceValidEmpty(const int pce);
 extern bool PieceValid(const int pce);
+extern void MirrorEvalTest(S_BOARD *pos);
 
 // movegen.c
 extern void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list);

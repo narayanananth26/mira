@@ -148,6 +148,10 @@ typedef struct {
 
 } S_SEARCHINFO;
 
+typedef struct {
+    int UseBook;
+} S_OPTIONS;
+
 /* GAME MOVES */
 /*
 0000 0000 0000 0000 0000 0111 1111 -> From 0x7F
@@ -230,6 +234,8 @@ extern U64 RankBBMask[8];
 extern U64 BlackPassedMask[64];
 extern U64 WhitePassedMask[64];
 extern U64 IsolatedMask[64];
+
+extern S_OPTIONS EngineOptions[1];
 
 /* FUNCTIONS */
 
@@ -314,5 +320,7 @@ extern void XBoardLoop(S_BOARD *pos, S_SEARCHINFO *info);
 
 // polybook.c
 extern U64 PolyKeyFromBoard(const S_BOARD *board);
+extern void InitPolyBook();
+extern void CleanPolyBook();
 
 #endif

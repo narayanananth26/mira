@@ -1,10 +1,58 @@
 #include "defs.h"
 #include "polykeys.h"
 #include <assert.h>
+#include <stdio.h>
+
+typedef struct {
+    U64 key;
+    unsigned short move;
+    unsigned short weight;
+    unsigned int learn;
+
+} S_POLY_BOOK_ENTRY;
+
+long NumEntries = 0;
+
+S_POLY_BOOK_ENTRY *entries;
 
 // https://web.archive.org/web/20260603181146/http://hgm.nubati.net/book_format.html
 // { EMPTY, wP, wN, wB, wR, wQ, wK, bP, bN, bB, bR, bQ, bK };
 const int PolyKindOfPiece[13] = {-1, 1, 3, 5, 7, 9, 11, 0, 2, 4, 6, 8, 10};
+
+void InitPolyBook() {
+
+    EngineOptions->UseBook = false;
+
+    FILE *pFile = fopen("performance.bin", "rb");
+
+    if (pFile == NULL) {
+        printf("Book File Not Read\n");
+    } else {
+        fseek(pFile, 0, SEEK_END);
+        long position = ftell(pFile);
+
+        if ((size_t)position < sizeof(S_POLY_BOOK_ENTRY)) {
+            printf("No Entries Found\n");
+            return;
+        }
+
+        NumEntries = position / sizeof(S_POLY_BOOK_ENTRY);
+        printf("%ld Entries Found In File\n", NumEntries);
+
+        entries = (S_POLY_BOOK_ENTRY *)malloc(NumEntries * sizeof(S_POLY_BOOK_ENTRY));
+        rewind(pFile);
+
+        size_t returnValue;
+        returnValue = fread(entries, sizeof(S_POLY_BOOK_ENTRY), NumEntries, pFile);
+        printf("fread() %ld Entries Read in from file\n", returnValue);
+
+        if (NumEntries > 0) {
+            EngineOptions->UseBook = true;
+        }
+    }
+}
+
+void CleanPolyBook() { free(entries); }
 
 int HasPawnForCapture(const S_BOARD *board) {
     int sqWithPawn = 0;

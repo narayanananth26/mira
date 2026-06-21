@@ -1,0 +1,7 @@
+.git
+.github
+mira
+mira.dSYM
+*.o
+.DS_Store
+*.pgn

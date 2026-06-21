@@ -2,7 +2,7 @@
 FROM debian:bookworm-slim AS build
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends gcc make \
+    && apt-get install -y --no-install-recommends build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /src

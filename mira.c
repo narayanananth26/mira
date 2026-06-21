@@ -1,5 +1,4 @@
 #include "defs.h"
-#include <_stdlib.h>
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>

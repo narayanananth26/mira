@@ -32,3 +32,7 @@ Pass `nobook` to disable the opening book.
 - Zobrist hashing with a transposition table
 - Polyglot opening book support
 - Perft testing for move-generation correctness
+
+## License
+
+[MIT](LICENSE) © Ananth Narayan

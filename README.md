@@ -4,26 +4,31 @@
 
 A chess engine written in C (VICE-style).
 
-## Build
+## Install
 
 ```sh
-make            # optimized build (asserts off)
-make debug      # debug build (asserts on)
+brew tap narayanananth26/mira
+brew trust narayanananth26/mira
+brew install mira
 ```
 
 ## Run
 
 ```sh
-./mira
+mira            # console mode — play in the terminal (default)
+mira uci        # UCI protocol (for GUIs like Arena, cutechess)
+mira xboard     # XBoard/WinBoard protocol
 ```
 
-At the prompt, pick a mode:
+Pass `nobook` to disable the opening book, e.g. `mira uci nobook`.
 
-- `uci` — UCI protocol (for GUIs like Arena, cutechess)
-- `xboard` — XBoard/WinBoard protocol
-- `mira` — interactive console mode
+## Build from source
 
-Pass `nobook` to disable the opening book.
+```sh
+make            # optimized build (asserts off)
+make debug      # debug build (asserts on)
+./mira          # run the local build
+```
 
 ## Features
 

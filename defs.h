@@ -13,6 +13,8 @@ typedef unsigned long long U64;
 #define MAXPOSITIONMOVES 256
 #define MAXDEPTH 64
 
+#define MAXBOOKMOVES 32
+
 // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
 //                 RANK_8/../RANK_1 move castlePerm enPas fiftyMove fullMoves
 #define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"

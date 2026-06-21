@@ -312,4 +312,7 @@ extern void UciLoop(S_BOARD *pos, S_SEARCHINFO *info);
 extern void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info);
 extern void XBoardLoop(S_BOARD *pos, S_SEARCHINFO *info);
 
+// polybook.c
+extern U64 PolyKeyFromBoard(const S_BOARD *board);
+
 #endif

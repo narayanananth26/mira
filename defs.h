@@ -21,8 +21,8 @@ typedef unsigned long long U64;
 //                 RANK_8/../RANK_1 move castlePerm enPas fiftyMove fullMoves
 #define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
-#define INFINITE 30000
-#define ISMATE (INFINITE - MAXDEPTH)
+#define INF_BOUND 32000
+#define ISMATE (INF_BOUND - MAXDEPTH)
 
 // clang-format off
 enum { EMPTY, wP, wN, wB, wR, wQ, wK, bP, bN, bB, bR, bQ, bK };

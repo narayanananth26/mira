@@ -97,7 +97,7 @@ static int Quiescence(int alpha, int beta, S_BOARD *pos, S_SEARCHINFO *info) {
 
     int Score = EvaluatePosition(pos);
 
-    assert(Score > -INFINITE && Score < INFINITE);
+    assert(Score > -INF_BOUND && Score < INF_BOUND);
 
     if (Score >= beta) {
         return beta;
@@ -112,7 +112,7 @@ static int Quiescence(int alpha, int beta, S_BOARD *pos, S_SEARCHINFO *info) {
 
     int MoveNum = 0;
     int Legal = 0;
-    Score = -INFINITE;
+    Score = -INF_BOUND;
 
     for (MoveNum = 0; MoveNum < list->count; ++MoveNum) {
 
@@ -176,7 +176,7 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
         depth++;
     }
 
-    int Score = -INFINITE;
+    int Score = -INF_BOUND;
     int PvMove = NOMOVE;
 
     if (ProbeHashEntry(pos, &PvMove, &Score, alpha, beta, depth) == true) {
@@ -206,9 +206,9 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
     int OldAlpha = alpha;
     int BestMove = NOMOVE;
 
-    int BestScore = -INFINITE;
+    int BestScore = -INF_BOUND;
 
-    Score = -INFINITE;
+    Score = -INF_BOUND;
 
     if (PvMove != NOMOVE) {
         for (MoveNum = 0; MoveNum < list->count; ++MoveNum) {
@@ -265,7 +265,7 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
 
     if (Legal == 0) {
         if (InCheck) {
-            return -INFINITE + pos->ply;
+            return -INF_BOUND + pos->ply;
         } else {
             return 0;
         }
@@ -285,7 +285,7 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
 void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info) {
 
     int bestMove = NOMOVE;
-    int bestScore = -INFINITE;
+    int bestScore = -INF_BOUND;
     int currentDepth = 0;
     int pvMoves = 0;
     int pvNum = 0;
@@ -299,7 +299,7 @@ void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info) {
     // iterative deepening
     if (bestMove == NOMOVE) {
         for (currentDepth = 1; currentDepth <= info->depth; ++currentDepth) {
-            bestScore = AlphaBeta(-INFINITE, INFINITE, currentDepth, pos, info, true);
+            bestScore = AlphaBeta(-INF_BOUND, INF_BOUND, currentDepth, pos, info, true);
 
             if (info->stopped == true) {
                 break;

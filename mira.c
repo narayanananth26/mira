@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    printf("Welcome to Mira! Type 'mira' for console mode...\n");
+    printf("Welcome to mira! Type 'mira' for console mode...\n");
 
     char line[256];
     while (true) {

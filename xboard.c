@@ -55,7 +55,7 @@ void PrintEngineStatus(const S_BOARD *pos, const S_SEARCHINFO *info) {
     else if (info->GAME_MODE == XBOARDMODE)
         modeStr = "XBoard";
 
-    printf("\n===================== Mira status =====================\n");
+    printf("\n===================== mira status =====================\n");
     printf("Mode         : %s\n", modeStr);
     printf("Side to move : %s\n", (pos->side == WHITE) ? "White" : "Black");
     printf("Ply: %d   HisPly: %d   FiftyMove: %d\n", pos->ply, pos->hisPly, pos->fiftyMove);

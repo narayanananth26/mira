@@ -6,7 +6,7 @@
 
 typedef unsigned long long U64;
 
-#define NAME "Mira 1.0"
+#define NAME "mira 0.1.0"
 #define BRD_SQ_NUM 120
 
 #define MAXGAMEMOVES 2048

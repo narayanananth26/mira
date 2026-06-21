@@ -15,6 +15,10 @@ long NumEntries = 0;
 
 S_POLY_BOOK_ENTRY *entries;
 
+#ifndef MIRA_BOOK_PATH
+#define MIRA_BOOK_PATH "performance.bin"
+#endif
+
 // https://web.archive.org/web/20260603181146/http://hgm.nubati.net/book_format.html
 // { EMPTY, wP, wN, wB, wR, wQ, wK, bP, bN, bB, bR, bQ, bK };
 const int PolyKindOfPiece[13] = {-1, 1, 3, 5, 7, 9, 11, 0, 2, 4, 6, 8, 10};
@@ -23,7 +27,11 @@ void InitPolyBook() {
 
     EngineOptions->UseBook = false;
 
+    // Prefer a book in the current directory, then the build-time path.
     FILE *pFile = fopen("performance.bin", "rb");
+    if (pFile == NULL) {
+        pFile = fopen(MIRA_BOOK_PATH, "rb");
+    }
 
     if (pFile == NULL) {
         printf("Book File Not Read\n");

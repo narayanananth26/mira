@@ -322,6 +322,8 @@ extern void UciLoop(S_BOARD *pos, S_SEARCHINFO *info);
 // xboard.c
 extern void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info);
 extern void XBoardLoop(S_BOARD *pos, S_SEARCHINFO *info);
+extern void PrintEngineStatus(const S_BOARD *pos, const S_SEARCHINFO *info);
+extern void PrintCommands(const int mode);
 
 // polybook.c
 extern int GetBookMove(S_BOARD *board);

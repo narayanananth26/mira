@@ -3,6 +3,73 @@
 #include <stdio.h>
 #include <string.h>
 
+// Prints the command list for the given GAME_MODE. The first block is shared by
+// every mode so that 'help', 'print' and 'quit' behave identically everywhere;
+// the rest reflects the protocol that mode actually speaks.
+void PrintCommands(const int mode) {
+    printf("\nCommands:\n");
+    printf("  help            - show status, board and this command list\n");
+    printf("  print           - show the current board\n");
+
+    if (mode == CONSOLEMODE) {
+        printf("  view            - show depth / movetime settings\n");
+        printf("  eval            - show the static evaluation\n");
+        printf("  mirror          - run the eval mirror test\n");
+        printf("  depth x         - set search depth (0 = max)\n");
+        printf("  time x          - set movetime in seconds (0 = off)\n");
+        printf("  post / nopost   - show / hide search thinking\n");
+        printf("  setboard <fen>  - set the position from a FEN string\n");
+        printf("  new             - start a new game\n");
+        printf("  go              - make the engine play the side to move\n");
+        printf("  force           - engine stops playing either side\n");
+        printf("  <move>          - enter a move, e.g. e2e4 or a7a8q\n");
+    } else if (mode == UCIMODE) {
+        printf("  uci             - identify engine (id / option / uciok)\n");
+        printf("  isready         - replies readyok\n");
+        printf("  ucinewgame      - reset to the start position\n");
+        printf("  position <startpos|fen ...> [moves ...]\n");
+        printf("  go [depth d] [movetime m] [wtime/btime/winc/binc ...]\n");
+        printf("  setoption name Hash value <MB>\n");
+        printf("  setoption name Book value <true|false>\n");
+    } else { // XBOARDMODE
+        printf("  protover N      - announce supported features\n");
+        printf("  new             - start a new game\n");
+        printf("  go              - make the engine play the side to move\n");
+        printf("  force           - engine stops playing either side\n");
+        printf("  usermove <move> - register the opponent's move\n");
+        printf("  sd x / st x     - set search depth / movetime\n");
+        printf("  level / time    - set time controls\n");
+        printf("  setboard <fen>  - set the position from a FEN string\n");
+        printf("  ping N          - replies pong N\n");
+    }
+
+    printf("  quit / exit / q - leave this mode\n");
+}
+
+// Prints engine state shared across all three interfaces: the configured
+// settings, the live board and the command list for the current mode.
+void PrintEngineStatus(const S_BOARD *pos, const S_SEARCHINFO *info) {
+    char *modeStr = "Console";
+    if (info->GAME_MODE == UCIMODE)
+        modeStr = "UCI";
+    else if (info->GAME_MODE == XBOARDMODE)
+        modeStr = "XBoard";
+
+    printf("\n===================== Mira status =====================\n");
+    printf("Mode         : %s\n", modeStr);
+    printf("Side to move : %s\n", (pos->side == WHITE) ? "White" : "Black");
+    printf("Ply: %d   HisPly: %d   FiftyMove: %d\n", pos->ply, pos->hisPly, pos->fiftyMove);
+    printf("Search depth : %d   TimeSet: %s\n", info->depth, info->timeset ? "yes" : "no");
+    printf("Post thinking: %s\n", info->POST_THINKING ? "on" : "off");
+    printf("Hash entries : %d\n", pos->HashTable->numEntries);
+    printf("Opening book : %s\n", EngineOptions->UseBook ? "on" : "off");
+    printf("PosKey       : %llX\n", pos->posKey);
+
+    PrintBoard(pos);
+    PrintCommands(info->GAME_MODE);
+    printf("=======================================================\n\n");
+}
+
 int ThreeFoldRep(const S_BOARD *pos) {
 
     assert(CheckBoard(pos));
@@ -156,11 +223,19 @@ void XBoardLoop(S_BOARD *pos, S_SEARCHINFO *info) {
 
         sscanf(inBuf, "%s", command);
 
-        printf("command seen:%s\n", inBuf);
-
         if (!strcmp(command, "quit") || !strcmp(command, "exit") || !strcmp(command, "q")) {
             info->quit = true;
             break;
+        }
+
+        if (!strcmp(command, "help")) {
+            PrintEngineStatus(pos, info);
+            continue;
+        }
+
+        if (!strcmp(command, "print")) {
+            PrintBoard(pos);
+            continue;
         }
 
         if (!strcmp(command, "force")) {
@@ -250,9 +325,6 @@ void XBoardLoop(S_BOARD *pos, S_SEARCHINFO *info) {
 
 void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info) {
 
-    printf("Welcome to Mira In Console Mode!\n");
-    printf("Type help for commands\n\n");
-
     info->GAME_MODE = CONSOLEMODE;
     info->POST_THINKING = true;
     setbuf(stdin, NULL);
@@ -265,6 +337,7 @@ void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info) {
 
     engineSide = BLACK;
     ParseFen(START_FEN, pos);
+    PrintEngineStatus(pos, info);
 
     while (true) {
 
@@ -294,20 +367,7 @@ void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info) {
         sscanf(inBuf, "%s", command);
 
         if (!strcmp(command, "help")) {
-            printf("Commands:\n");
-            printf("quit - quit game\n");
-            printf("force - computer will not think\n");
-            printf("print - show board\n");
-            printf("post - show thinking\n");
-            printf("nopost - do not show thinking\n");
-            printf("new - start new game\n");
-            printf("go - set computer thinking\n");
-            printf("depth x - set depth to x\n");
-            printf("time x - set thinking time to x seconds (depth still applies if set)\n");
-            printf("view - show current depth and movetime settings\n");
-            printf("setboard x - set position to fen x\n");
-            printf("** note ** - to reset time and depth, set to 0\n");
-            printf("enter moves using b7b8q notation\n\n\n");
+            PrintEngineStatus(pos, info);
             continue;
         }
 

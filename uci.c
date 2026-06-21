@@ -137,9 +137,12 @@ void UciLoop(S_BOARD *pos, S_SEARCHINFO *info) {
         } else if (!strncmp(line, "ucinewgame", 10)) {
             ParsePosition("position startpos\n", pos);
         } else if (!strncmp(line, "go", 2)) {
-            printf("Seen Go..\n");
             ParseGo(line, info, pos);
-        } else if (!strncmp(line, "quit", 4)) {
+        } else if (!strncmp(line, "help", 4)) {
+            PrintEngineStatus(pos, info);
+        } else if (!strncmp(line, "print", 5)) {
+            PrintBoard(pos);
+        } else if (!strncmp(line, "quit", 4) || !strncmp(line, "exit", 4) || !strncmp(line, "q", 1)) {
             info->quit = true;
             break;
         } else if (!strncmp(line, "uci", 3)) {

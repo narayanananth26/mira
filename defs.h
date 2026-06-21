@@ -13,6 +13,8 @@ typedef unsigned long long U64;
 #define MAXPOSITIONMOVES 256
 #define MAXDEPTH 64
 
+#define MAX_HASH 1024
+
 #define MAXBOOKMOVES 32
 
 // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
@@ -278,6 +280,7 @@ extern bool PieceValidEmpty(const int pce);
 extern bool PieceValid(const int pce);
 extern bool SqIs120(const int sq);
 extern bool PceValidEmptyOffbrd(const int pce);
+extern void DebugAnalysisTest(S_BOARD *pos, S_SEARCHINFO *info);
 extern void MirrorEvalTest(S_BOARD *pos);
 extern int MoveListOk(const S_MOVELIST *list, const S_BOARD *pos);
 

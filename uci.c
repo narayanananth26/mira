@@ -106,16 +106,19 @@ void ParsePosition(char *lineIn, S_BOARD *pos) {
 
 void UciLoop(S_BOARD *pos, S_SEARCHINFO *info) {
 
+    info->GAME_MODE = UCIMODE;
+
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
 
-    info->GAME_MODE = UCIMODE;
-    info->POST_THINKING = true;
-
     char line[INPUTBUFFER];
     printf("id name %s\n", NAME);
-    printf("id author ananth\n");
+    printf("id author Ananth\n");
+    printf("option name Hash type spin default 64 min 4 max %d\n", MAX_HASH);
+    printf("option name Book type check default true\n");
     printf("uciok\n");
+
+    int MB = 64;
 
     while (true) {
         memset(&line[0], 0, sizeof(line));
@@ -134,14 +137,34 @@ void UciLoop(S_BOARD *pos, S_SEARCHINFO *info) {
         } else if (!strncmp(line, "ucinewgame", 10)) {
             ParsePosition("position startpos\n", pos);
         } else if (!strncmp(line, "go", 2)) {
+            printf("Seen Go..\n");
             ParseGo(line, info, pos);
         } else if (!strncmp(line, "quit", 4)) {
             info->quit = true;
             break;
         } else if (!strncmp(line, "uci", 3)) {
             printf("id name %s\n", NAME);
-            printf("id author ananth\n");
+            printf("id author Ananth\n");
             printf("uciok\n");
+        } else if (!strncmp(line, "debug", 4)) {
+            DebugAnalysisTest(pos, info);
+            break;
+        } else if (!strncmp(line, "setoption name Hash value ", 26)) {
+            sscanf(line, "%*s %*s %*s %*s %d", &MB);
+            if (MB < 4)
+                MB = 4;
+            if (MB > MAX_HASH)
+                MB = MAX_HASH;
+            printf("Set Hash to %d MB\n", MB);
+            InitHashTable(pos->HashTable, MB);
+        } else if (!strncmp(line, "setoption name Book value ", 26)) {
+            char *ptrTrue = NULL;
+            ptrTrue = strstr(line, "true");
+            if (ptrTrue != NULL) {
+                EngineOptions->UseBook = true;
+            } else {
+                EngineOptions->UseBook = false;
+            }
         }
         if (info->quit)
             break;

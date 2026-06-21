@@ -22,42 +22,30 @@ int main(int argc, char *argv[]) {
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
 
-    for (int ArgNum = 0; ArgNum < argc; ++ArgNum) {
-        if (strncmp(argv[ArgNum], "nobook", 6) == 0) {
+    // First recognized argument selects the protocol; flags (e.g. nobook) can
+    // appear in any position. With no mode given, drop straight into console.
+    char *mode = NULL;
+    for (int ArgNum = 1; ArgNum < argc; ++ArgNum) {
+        if (strcmp(argv[ArgNum], "nobook") == 0) {
             EngineOptions->UseBook = false;
             printf("Book Off\n");
+        } else if (strcmp(argv[ArgNum], "uci") == 0 || strcmp(argv[ArgNum], "xboard") == 0 ||
+                   strcmp(argv[ArgNum], "console") == 0) {
+            mode = argv[ArgNum];
+        } else {
+            printf("Unknown argument: %s\n", argv[ArgNum]);
+            printf("Usage: mira [uci|xboard|console] [nobook]\n");
+            free(pos->HashTable->pTable);
+            return 1;
         }
     }
 
-    printf("Welcome to mira! Type 'mira' for console mode...\n");
-
-    char line[256];
-    while (true) {
-        memset(&line[0], 0, sizeof(line));
-
-        fflush(stdout);
-        if (!fgets(line, 256, stdin))
-            continue;
-        if (line[0] == '\n')
-            continue;
-        if (!strncmp(line, "uci", 3)) {
-            UciLoop(pos, info);
-            if (info->quit == true)
-                break;
-            continue;
-        } else if (!strncmp(line, "xboard", 6)) {
-            XBoardLoop(pos, info);
-            if (info->quit == true)
-                break;
-            continue;
-        } else if (!strncmp(line, "mira", 4)) {
-            ConsoleLoop(pos, info);
-            if (info->quit == true)
-                break;
-            continue;
-        } else if ((!strncmp(line, "quit", 4)) || (!strncmp(line, "exit", 4)) || (!strncmp(line, "q", 1))) {
-            break;
-        }
+    if (mode == NULL || strcmp(mode, "console") == 0) {
+        ConsoleLoop(pos, info);
+    } else if (strcmp(mode, "uci") == 0) {
+        UciLoop(pos, info);
+    } else if (strcmp(mode, "xboard") == 0) {
+        XBoardLoop(pos, info);
     }
 
     free(pos->HashTable->pTable);

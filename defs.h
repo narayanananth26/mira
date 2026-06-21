@@ -268,7 +268,10 @@ extern bool SideValid(const int side);
 extern bool FileRankValid(const int fr);
 extern bool PieceValidEmpty(const int pce);
 extern bool PieceValid(const int pce);
+extern bool SqIs120(const int sq);
+extern bool PceValidEmptyOffbrd(const int pce);
 extern void MirrorEvalTest(S_BOARD *pos);
+extern int MoveListOk(const S_MOVELIST *list, const S_BOARD *pos);
 
 // movegen.c
 extern void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list);

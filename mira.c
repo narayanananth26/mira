@@ -1,4 +1,5 @@
 #include "defs.h"
+#include <_stdlib.h>
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -16,7 +17,11 @@ int main() {
 
     S_BOARD pos[1];
     S_SEARCHINFO info[1];
+    info->quit = false;
+    pos->HashTable->pTable = NULL;
     InitHashTable(pos->HashTable, 64);
+    setbuf(stdin, NULL);
+    setbuf(stdout, NULL);
 
     printf("Welcome to Mira! Type 'mira' for console mode...\n");
 

@@ -89,23 +89,27 @@ bool CheckBoard(const S_BOARD *pos) {
 }
 
 void UpdateListsMaterial(S_BOARD *pos) {
-    int piece, sq, index, color;
+
+    int piece, sq, index, colour;
 
     for (index = 0; index < BRD_SQ_NUM; ++index) {
         sq = index;
-        piece = pos->pieces[sq];
-
+        piece = pos->pieces[index];
+        assert(PceValidEmptyOffbrd(piece));
         if (piece != OFFBOARD && piece != EMPTY) {
-            color = PieceCol[piece];
+            colour = PieceCol[piece];
+            assert(SideValid(colour));
 
             if (PieceBig[piece] == true)
-                pos->bigPce[color]++;
-            if (PieceMaj[piece] == true)
-                pos->majPce[color]++;
+                pos->bigPce[colour]++;
             if (PieceMin[piece] == true)
-                pos->minPce[color]++;
+                pos->minPce[colour]++;
+            if (PieceMaj[piece] == true)
+                pos->majPce[colour]++;
 
-            pos->material[color] += PieceVal[piece];
+            pos->material[colour] += PieceVal[piece];
+
+            assert(pos->pceNum[piece] < 10 && pos->pceNum[piece] >= 0);
 
             pos->pList[piece][pos->pceNum[piece]] = sq;
             pos->pceNum[piece]++;

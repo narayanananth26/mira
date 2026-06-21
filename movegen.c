@@ -297,6 +297,7 @@ void GenerateAllCaps(const S_BOARD *pos, S_MOVELIST *list) {
 
         pce = LoopNonSlidePce[pceIndex++];
     }
+    assert(MoveListOk(list, pos));
 }
 
 void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list) {
@@ -470,4 +471,6 @@ void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list) {
 
         pce = LoopNonSlidePce[pceIndex++];
     }
+
+    assert(MoveListOk(list, pos));
 }

@@ -2,6 +2,33 @@
 #include <stdio.h>
 #include <string.h>
 
+int MoveListOk(const S_MOVELIST *list, const S_BOARD *pos) {
+    if (list->count < 0 || list->count >= MAXPOSITIONMOVES) {
+        return false;
+    }
+
+    int MoveNum;
+    int from = 0;
+    int to = 0;
+    for (MoveNum = 0; MoveNum < list->count; ++MoveNum) {
+        to = TOSQ(list->moves[MoveNum].move);
+        from = FROMSQ(list->moves[MoveNum].move);
+        if (!SqOnBoard(to) || !SqOnBoard(from)) {
+            return false;
+        }
+        if (!PieceValid(pos->pieces[from])) {
+            PrintBoard(pos);
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool SqIs120(const int sq) { return (sq >= 0 && sq < 120); }
+
+bool PceValidEmptyOffbrd(const int pce) { return (PieceValidEmpty(pce) || pce == OFFBOARD); }
+
 bool SqOnBoard(const int sq) { return FilesBrd[sq] != OFFBOARD; }
 
 bool SideValid(const int side) { return (side == WHITE || side == BLACK); }

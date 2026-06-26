@@ -1,8 +1,5 @@
 name: Release
 
-# Trigger on a pushed tag, NOT on a published release. The release is created
-# only after the image builds and pushes successfully, so a broken build never
-# produces a release.
 on:
   push:
     tags:
@@ -12,8 +9,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: write     # create the GitHub release (last step)
-      packages: write     # push the image to ghcr.io
+      contents: write # create the GitHub release (last step)
+      packages: write # push the image to ghcr.io
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,8 +43,33 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      # Reached only if every step above succeeded.
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
+
+  # Open a PR on the Homebrew tap bumping the formula's url + sha256 to the new
+  # tag
+  bump-formula:
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: narayanananth26/homebrew-mira
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+      - name: Bump formula
+        env:
+          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          URL="https://github.com/narayanananth26/mira/archive/refs/tags/${TAG}.tar.gz"
+          SHA=$(curl -sL "$URL" | shasum -a 256 | cut -d' ' -f1)
+          sed -i -E "s|^  url \".*\"|  url \"$URL\"|; s|^  sha256 \".*\"|  sha256 \"$SHA\"|" Formula/mira.rb
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "bump-${TAG}"
+          git commit -am "mira ${TAG#v}"
+          git push -u origin "bump-${TAG}"
+          gh pr create --repo narayanananth26/homebrew-mira \
+            --base main --head "bump-${TAG}" --fill

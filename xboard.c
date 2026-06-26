@@ -3,9 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// Prints the command list for the given GAME_MODE. The first block is shared by
-// every mode so that 'help', 'print' and 'quit' behave identically everywhere;
-// the rest reflects the protocol that mode actually speaks.
 void PrintCommands(const int mode) {
     printf("\nCommands:\n");
     printf("  help            - show status, board and this command list\n");
@@ -46,8 +43,6 @@ void PrintCommands(const int mode) {
     printf("  quit / exit / q - leave this mode\n");
 }
 
-// Prints engine state shared across all three interfaces: the configured
-// settings, the live board and the command list for the current mode.
 void PrintEngineStatus(const S_BOARD *pos, const S_SEARCHINFO *info) {
     char *modeStr = "Console";
     if (info->GAME_MODE == UCIMODE)

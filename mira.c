@@ -21,8 +21,6 @@ int main(int argc, char *argv[]) {
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
 
-    // First recognized argument selects the protocol; flags (e.g. nobook) can
-    // appear in any position. With no mode given, drop straight into console.
     char *mode = NULL;
     for (int ArgNum = 1; ArgNum < argc; ++ArgNum) {
         if (strcmp(argv[ArgNum], "nobook") == 0) {

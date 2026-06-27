@@ -1,13 +1,13 @@
 #include "defs.h"
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
 
 static void CheckUp(S_SEARCHINFO *info) {
     // .. check if time up, or interrupt from GUI
     if (info->timeset == true && GetTimeMs() > info->stoptime) {
         info->stopped = true;
     }
-    ReadInput(info);
 }
 
 static void PickNextMove(int moveNum, S_MOVELIST *list) {
@@ -282,6 +282,16 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
     }
 
     return alpha;
+}
+
+int SearchPosition_Thread(void *data) {
+    S_SEARCH_THREAD_DATA *searchData = (S_SEARCH_THREAD_DATA *)data;
+    S_BOARD *pos = malloc(sizeof(S_BOARD));
+    memcpy(pos, searchData->originalPosition, sizeof(S_BOARD));
+    SearchPosition(pos, searchData->info, searchData->ttable);
+    free(pos);
+    printf("freed\n");
+    return 0;
 }
 
 void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info, S_HASHTABLE *table) {

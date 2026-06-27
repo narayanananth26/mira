@@ -2,6 +2,18 @@
 #include <stdio.h>
 #include <string.h>
 
+static const char *Glyph[13] = {
+    " ",
+    "♟", "♞", "♝", "♜", "♛", "♚", // white
+    "♟", "♞", "♝", "♜", "♛", "♚", // black
+};
+
+#define LIGHT_BG "\033[48;5;180m"
+#define DARK_BG "\033[48;5;137m"
+#define WHITE_FG "\033[38;5;231m"
+#define BLACK_FG "\033[38;5;16m"
+#define RESET "\033[0m"
+
 void PrintBoardFor(const S_BOARD *pos, const int humanSide) {
 
     int sq, file, rank, piece;
@@ -20,18 +32,22 @@ void PrintBoardFor(const S_BOARD *pos, const int humanSide) {
 
     printf("\n");
     for (rank = rStart; rank != rEnd + rStep; rank += rStep) {
-        printf("%d", rank + 1);
+        printf(" %d ", rank + 1);
         for (file = fStart; file != fEnd + fStep; file += fStep) {
             sq = FR2SQ(file, rank);
             piece = pos->pieces[sq];
-            printf("%3c", PceChar[piece]);
+
+            const char *bg = ((file + rank) % 2) ? LIGHT_BG : DARK_BG;
+            const char *fg = (piece >= bP) ? BLACK_FG : WHITE_FG;
+
+            printf("%s%s\033[1m %s %s", bg, fg, Glyph[piece], RESET);
         }
         printf("\n");
     }
 
-    printf("\n ");
+    printf("   ");
     for (file = fStart; file != fEnd + fStep; file += fStep) {
-        printf("%3c", 'a' + file);
+        printf(" %c ", 'a' + file);
     }
     printf("\n\n");
 }

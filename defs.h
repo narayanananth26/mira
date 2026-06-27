@@ -304,6 +304,7 @@ extern void PerftTest(int depth, S_BOARD *pos);
 
 // misc.c
 extern int GetTimeMs();
+extern void ReadInput(S_SEARCHINFO *info);
 
 // pvtable.c
 extern void InitHashTable(S_HASHTABLE *table, const int MB);

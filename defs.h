@@ -276,6 +276,7 @@ extern bool SqAttacked(const int sq, const int side, const S_BOARD *pos);
 // io.c
 extern char *PrSq(const int sq);
 extern char *PrMove(const int move);
+extern char *PrMoveSan(S_BOARD *pos, const int move);
 extern void PrintMoveList(const S_MOVELIST *list);
 extern int ParseMove(char *ptrChar, S_BOARD *pos);
 extern int ParseSan(char *ptrChar, S_BOARD *pos);

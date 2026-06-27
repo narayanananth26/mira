@@ -209,13 +209,15 @@ void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info) {
             move = Think(pos, info, Levels[level - 1][0], Levels[level - 1][1]);
             if (move == NOMOVE)
                 break;
+            char san[16];
+            strcpy(san, PrMoveSan(pos, move)); // SAN needs the pre-move position
             MakeMove(pos, move);
             if (info->bestScore == NOSCORE) {
-                snprintf(note, sizeof(note), "mira plays %s   (book)", PrMove(move));
+                snprintf(note, sizeof(note), "mira plays %s   (book)", san);
             } else {
                 char ev[16];
                 FormatScore(ev, sizeof(ev), engineSide == WHITE ? info->bestScore : -info->bestScore);
-                snprintf(note, sizeof(note), "mira plays %s   eval %s", PrMove(move), ev);
+                snprintf(note, sizeof(note), "mira plays %s   eval %s", san, ev);
             }
             continue;
         }
@@ -247,12 +249,14 @@ void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info) {
             continue;
         } else if (!strncmp(line, "hint", 4)) {
             move = Think(pos, info, 0, 4);
+            char san[16];
+            strcpy(san, PrMoveSan(pos, move));
             if (info->bestScore == NOSCORE) {
-                snprintf(note, sizeof(note), "hint: %s   (book)", PrMove(move));
+                snprintf(note, sizeof(note), "hint: %s   (book)", san);
             } else {
                 char ev[16];
                 FormatScore(ev, sizeof(ev), pos->side == WHITE ? info->bestScore : -info->bestScore);
-                snprintf(note, sizeof(note), "hint: %s   eval %s", PrMove(move), ev);
+                snprintf(note, sizeof(note), "hint: %s   eval %s", san, ev);
             }
             continue;
         } else if (!strncmp(line, "undo", 4) || line[0] == 'u') {

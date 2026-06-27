@@ -84,7 +84,7 @@ static int GameStatus(S_BOARD *pos) {
     return ONGOING;
 }
 
-// difficulty 1-5 
+// difficulty 1-5
 static int Think(S_BOARD *pos, S_SEARCHINFO *info, int useTime, int value) {
 
     S_BOARD copy[1];
@@ -135,8 +135,16 @@ static void PrintHelp(void) {
 }
 
 // clear screen + scrollback
-static void ClearScreen(void) {
-    printf("\033[2J\033[3J\033[H");
+static void ClearScreen(void) { printf("\033[2J\033[3J\033[H"); }
+
+// score (white-relative cp)
+static void FormatScore(char *buf, int size, int whiteCp) {
+    if (whiteCp > ISMATE)
+        snprintf(buf, size, "#%d", (INF_BOUND - whiteCp + 1) / 2);
+    else if (whiteCp < -ISMATE)
+        snprintf(buf, size, "#-%d", (INF_BOUND + whiteCp + 1) / 2);
+    else
+        snprintf(buf, size, "%+.2f", whiteCp / 100.0);
 }
 
 void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info) {
@@ -197,11 +205,18 @@ void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info) {
         // engine's turn
         if (pos->side != humanSide) {
             printf("mira is thinking...\n");
+            int engineSide = pos->side;
             move = Think(pos, info, Levels[level - 1][0], Levels[level - 1][1]);
             if (move == NOMOVE)
                 break;
             MakeMove(pos, move);
-            snprintf(note, sizeof(note), "mira plays %s", PrMove(move));
+            if (info->bestScore == NOSCORE) {
+                snprintf(note, sizeof(note), "mira plays %s   (book)", PrMove(move));
+            } else {
+                char ev[16];
+                FormatScore(ev, sizeof(ev), engineSide == WHITE ? info->bestScore : -info->bestScore);
+                snprintf(note, sizeof(note), "mira plays %s   eval %s", PrMove(move), ev);
+            }
             continue;
         }
 
@@ -232,7 +247,13 @@ void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info) {
             continue;
         } else if (!strncmp(line, "hint", 4)) {
             move = Think(pos, info, 0, 4);
-            snprintf(note, sizeof(note), "hint: %s", PrMove(move));
+            if (info->bestScore == NOSCORE) {
+                snprintf(note, sizeof(note), "hint: %s   (book)", PrMove(move));
+            } else {
+                char ev[16];
+                FormatScore(ev, sizeof(ev), pos->side == WHITE ? info->bestScore : -info->bestScore);
+                snprintf(note, sizeof(note), "hint: %s   eval %s", PrMove(move), ev);
+            }
             continue;
         } else if (!strncmp(line, "undo", 4) || line[0] == 'u') {
             int back = pos->hisPly >= 2 ? 2 : pos->hisPly;

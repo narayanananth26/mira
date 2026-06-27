@@ -308,15 +308,19 @@ void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info, S_HASHTABLE *table) {
         bestMove = GetBookMove(pos);
     }
 
+    int wasBook = (bestMove != NOMOVE);
+
     // iterative deepening
     if (bestMove == NOMOVE) {
         for (currentDepth = 1; currentDepth <= info->depth; ++currentDepth) {
-            bestScore = AlphaBeta(-INF_BOUND, INF_BOUND, currentDepth, pos, info, table, true);
+            int score = AlphaBeta(-INF_BOUND, INF_BOUND, currentDepth, pos, info, table, true);
 
+            // keep the last fully searched depth, drop an aborted one
             if (info->stopped == true) {
                 break;
             }
 
+            bestScore = score;
             pvMoves = GetPvLine(currentDepth, pos, table);
             bestMove = pos->PvArray[0];
 
@@ -331,6 +335,7 @@ void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info, S_HASHTABLE *table) {
     }
 
     pos->PvArray[0] = bestMove;
+    info->bestScore = wasBook ? NOSCORE : bestScore;
 
     if (!info->GAME_MODE)
         printf("bestmove %s\n", PrMove(bestMove));

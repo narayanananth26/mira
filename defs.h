@@ -146,6 +146,8 @@ typedef struct {
     float fhf; // fail high first
     int nullCut;
 
+    int GAME_MODE;
+
 } S_SEARCHINFO;
 
 typedef struct {
@@ -331,5 +333,6 @@ extern void CleanPolyBook();
 
 // console.c
 extern void PrintBoardFor(const S_BOARD *pos, const int humanSide);
+extern void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info);
 
 #endif

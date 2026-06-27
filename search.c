@@ -320,13 +320,18 @@ void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info, S_HASHTABLE *table) {
             pvMoves = GetPvLine(currentDepth, pos, table);
             bestMove = pos->PvArray[0];
 
-            printf("info score cp %d depth %d nodes %ld time %d pv", bestScore, currentDepth, info->nodes, GetTimeMs() - info->starttime);
-            for (pvNum = 0; pvNum < pvMoves; ++pvNum) {
-                printf(" %s", PrMove(pos->PvArray[pvNum]));
+            if (!info->GAME_MODE) {
+                printf("info score cp %d depth %d nodes %ld time %d pv", bestScore, currentDepth, info->nodes, GetTimeMs() - info->starttime);
+                for (pvNum = 0; pvNum < pvMoves; ++pvNum) {
+                    printf(" %s", PrMove(pos->PvArray[pvNum]));
+                }
+                printf("\n");
             }
-            printf("\n");
         }
     }
 
-    printf("bestmove %s\n", PrMove(bestMove));
+    pos->PvArray[0] = bestMove;
+
+    if (!info->GAME_MODE)
+        printf("bestmove %s\n", PrMove(bestMove));
 }

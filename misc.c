@@ -66,10 +66,10 @@ void ReadInput(S_SEARCHINFO *info) {
             *endc = 0;
 
         if (strlen(input) > 0) {
-            if (!strncmp(input, "quit", 4) || !strncmp(input, "exit", 4) || !strncmp(input, "q", 1)) {
+            if (!strncmp(input, "quit", 4)) {
                 info->quit = true;
             }
         }
         return;
     }
-}
+} 

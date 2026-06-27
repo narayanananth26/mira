@@ -65,7 +65,7 @@ void ParseGo(char *line, S_SEARCHINFO *info, S_BOARD *pos) {
 
     printf("time:%d start:%d stop:%d depth:%d timeset:%d\n", time, info->starttime, info->stoptime, info->depth, info->timeset);
 
-    SearchPosition(pos, info);
+    SearchPosition(pos, info, HashTable);
 }
 
 // position fen fenstr
@@ -143,7 +143,7 @@ void UciLoop(S_BOARD *pos, S_SEARCHINFO *info) {
             ParseGo("go infinite", info, pos);
         } else if (!strncmp(line, "print", 5)) {
             PrintBoard(pos);
-        } else if (!strncmp(line, "quit", 4) || !strncmp(line, "exit", 4) || !strncmp(line, "q", 1)) {
+        } else if (!strncmp(line, "quit", 4)) {
             info->quit = true;
             break;
         } else if (!strncmp(line, "uci", 3)) {
@@ -151,7 +151,7 @@ void UciLoop(S_BOARD *pos, S_SEARCHINFO *info) {
             printf("id author Ananth\n");
             printf("uciok\n");
         } else if (!strncmp(line, "debug", 4)) {
-            DebugAnalysisTest(pos, info);
+            DebugAnalysisTest(pos, info, HashTable);
             break;
         } else if (!strncmp(line, "setoption name Hash value ", 26)) {
             sscanf(line, "%*s %*s %*s %*s %d", &MB);
@@ -160,7 +160,7 @@ void UciLoop(S_BOARD *pos, S_SEARCHINFO *info) {
             if (MB > MAX_HASH)
                 MB = MAX_HASH;
             printf("Set Hash to %d MB\n", MB);
-            InitHashTable(pos->HashTable, MB);
+            InitHashTable(HashTable, MB);
         } else if (!strncmp(line, "setoption name Book value ", 26)) {
             char *ptrTrue = NULL;
             ptrTrue = strstr(line, "true");

@@ -68,6 +68,7 @@ typedef struct {
     int score;
     int depth;
     int flags;
+    int gen;
 } S_HASHENTRY;
 
 typedef struct {
@@ -77,6 +78,7 @@ typedef struct {
     int overWrite;
     int hit;
     int cut;
+    int currentGen;
 } S_HASHTABLE;
 
 typedef struct {

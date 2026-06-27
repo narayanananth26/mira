@@ -15,10 +15,9 @@ int main(int argc, char *argv[]) {
 
     S_BOARD pos[1];
     S_SEARCHINFO info[1];
-    S_HASHTABLE table[1];
     info->quit = false;
-    table->pTable = NULL;
-    InitHashTable(table, 64);
+    HashTable->pTable = NULL;
+    InitHashTable(HashTable, 64);
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
 
@@ -51,7 +50,7 @@ int main(int argc, char *argv[]) {
             break;
         }
     }
-    free(table->pTable);
+    free(HashTable->pTable);
 
     return 0;
 }

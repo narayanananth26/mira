@@ -42,8 +42,10 @@ void ClearHashTable(S_HASHTABLE *table) {
         tableEntry->depth = 0;
         tableEntry->score = 0;
         tableEntry->flags = 0;
+        tableEntry->gen = 0;
     }
     table->newWrite = 0;
+    table->currentGen = 0;
 }
 
 void InitHashTable(S_HASHTABLE *table, const int MB) {
@@ -130,10 +132,18 @@ void StoreHashEntry(S_BOARD *pos, S_HASHTABLE *table, const int move, int score,
     assert(score >= -INF_BOUND && score <= INF_BOUND);
     assert(pos->ply >= 0 && pos->ply < MAXDEPTH);
 
+    // replace only if gen/depth is greater
+    int replace = false;
+
     if (table->pTable[index].posKey == 0) {
         table->newWrite++;
-    } else {
-        table->overWrite++;
+        replace = true;
+    } else if (table->pTable[index].gen < table->currentGen || table->pTable[index].depth <= depth) {
+        replace = true;
+    }
+
+    if (replace == false) {
+        return;
     }
 
     if (score > ISMATE)
@@ -146,6 +156,7 @@ void StoreHashEntry(S_BOARD *pos, S_HASHTABLE *table, const int move, int score,
     table->pTable[index].flags = flags;
     table->pTable[index].score = score;
     table->pTable[index].depth = depth;
+    table->pTable[index].gen = table->currentGen;
 }
 
 int ProbePvMove(const S_BOARD *pos, S_HASHTABLE *table) {

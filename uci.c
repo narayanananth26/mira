@@ -135,6 +135,7 @@ void UciLoop(S_BOARD *pos, S_SEARCHINFO *info) {
         } else if (!strncmp(line, "position", 8)) {
             ParsePosition(line, pos);
         } else if (!strncmp(line, "ucinewgame", 10)) {
+            ClearHashTable(HashTable);
             ParsePosition("position startpos\n", pos);
         } else if (!strncmp(line, "go", 2)) {
             ParseGo(line, info, pos);

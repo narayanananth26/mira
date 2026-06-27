@@ -66,6 +66,7 @@ static void ClearForSearch(S_BOARD *pos, S_SEARCHINFO *info, S_HASHTABLE *table)
     table->overWrite = 0;
     table->hit = 0;
     table->cut = 0;
+    table->currentGen++;
     pos->ply = 0;
 
     info->starttime = GetTimeMs();
@@ -309,8 +310,7 @@ void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info, S_HASHTABLE *table) {
             pvMoves = GetPvLine(currentDepth, pos, table);
             bestMove = pos->PvArray[0];
 
-            printf("info score cp %d depth %d nodes %ld time %d ", bestScore, currentDepth, info->nodes, GetTimeMs() - info->starttime);
-            printf("pv");
+            printf("info score cp %d depth %d nodes %ld time %d pv", bestScore, currentDepth, info->nodes, GetTimeMs() - info->starttime);
             for (pvNum = 0; pvNum < pvMoves; ++pvNum) {
                 printf(" %s", PrMove(pos->PvArray[pvNum]));
             }

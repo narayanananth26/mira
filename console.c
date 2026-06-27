@@ -129,6 +129,16 @@ static void PrintLegal(S_BOARD *pos) {
     printf("\n(%d legal moves)\n", shown);
 }
 
+static void PrintHelp(void) {
+    printf("commands: <move> | undo | new | board | moves | hint | quit\n");
+    printf("moves accept SAN (Nf3, exd5, O-O, e8=Q) or coords (e2e4)\n");
+}
+
+// clear screen + scrollback
+static void ClearScreen(void) {
+    printf("\033[2J\033[3J\033[H");
+}
+
 void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info) {
 
     char line[256];
@@ -162,6 +172,7 @@ void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info) {
 
     while (true) {
         if (redraw) {
+            ClearScreen();
             PrintBoardFor(pos, humanSide);
             if (note[0])
                 printf("%s\n", note);
@@ -205,6 +216,11 @@ void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info) {
 
         if (!strncmp(line, "quit", 4) || !strncmp(line, "exit", 4)) {
             break;
+        } else if (!strncmp(line, "help", 4) || line[0] == '?') {
+            PrintHelp();
+            redraw = 0;
+            continue;
+        } else if (!strncmp(line, "board", 5)) {
             continue;
         } else if (!strncmp(line, "moves", 5)) {
             PrintLegal(pos);

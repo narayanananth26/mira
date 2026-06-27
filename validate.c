@@ -39,7 +39,7 @@ bool PieceValidEmpty(const int pce) { return (pce >= EMPTY && pce <= bK); }
 
 bool PieceValid(const int pce) { return (pce >= wP && pce <= bK); }
 
-void DebugAnalysisTest(S_BOARD *pos, S_SEARCHINFO *info) {
+void DebugAnalysisTest(S_BOARD *pos, S_SEARCHINFO *info, S_HASHTABLE *table) {
 
     FILE *file;
     file = fopen("lct2.epd", "r");
@@ -56,11 +56,11 @@ void DebugAnalysisTest(S_BOARD *pos, S_SEARCHINFO *info) {
         while (fgets(lineIn, 1024, file) != NULL) {
             info->starttime = GetTimeMs();
             info->stoptime = info->starttime + time;
-            ClearHashTable(pos->HashTable);
+            ClearHashTable(table);
             ParseFen(lineIn, pos);
             printf("\n%s\n", lineIn);
             printf("time:%d start:%d stop:%d depth:%d timeset:%d\n", time, info->starttime, info->stoptime, info->depth, info->timeset);
-            SearchPosition(pos, info);
+            SearchPosition(pos, info, table);
             memset(&lineIn[0], 0, sizeof(lineIn));
         }
     }

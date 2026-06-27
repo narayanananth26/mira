@@ -21,30 +21,35 @@ int main(int argc, char *argv[]) {
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
 
-    char *mode = NULL;
-    for (int ArgNum = 1; ArgNum < argc; ++ArgNum) {
-        if (strcmp(argv[ArgNum], "nobook") == 0) {
+    int ArgNum = 0;
+
+    for (ArgNum = 0; ArgNum < argc; ++ArgNum) {
+        if (strncmp(argv[ArgNum], "nobook", 6) == 0) {
             EngineOptions->UseBook = false;
             printf("Book Off\n");
-        } else if (strcmp(argv[ArgNum], "uci") == 0 || strcmp(argv[ArgNum], "xboard") == 0 ||
-                   strcmp(argv[ArgNum], "console") == 0) {
-            mode = argv[ArgNum];
-        } else {
-            printf("Unknown argument: %s\n", argv[ArgNum]);
-            printf("Usage: mira [uci|xboard|console] [nobook]\n");
-            free(pos->HashTable->pTable);
-            return 1;
         }
     }
 
-    if (mode == NULL || strcmp(mode, "console") == 0) {
-        ConsoleLoop(pos, info);
-    } else if (strcmp(mode, "uci") == 0) {
-        UciLoop(pos, info);
-    } else if (strcmp(mode, "xboard") == 0) {
-        XBoardLoop(pos, info);
-    }
+    printf("Welcome to mira! Type 'uci' for uci mode...\n");
 
+    char line[256];
+    while (true) {
+        memset(&line[0], 0, sizeof(line));
+
+        fflush(stdout);
+        if (!fgets(line, 256, stdin))
+            continue;
+        if (line[0] == '\n')
+            continue;
+        if (!strncmp(line, "uci", 3)) {
+            UciLoop(pos, info);
+            if (info->quit == true)
+                break;
+            continue;
+        } else if (!strncmp(line, "quit", 4)) {
+            break;
+        }
+    }
     free(pos->HashTable->pTable);
 
     return 0;

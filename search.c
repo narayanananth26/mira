@@ -309,34 +309,15 @@ void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info) {
             pvMoves = GetPvLine(currentDepth, pos);
             bestMove = pos->PvArray[0];
 
-            if (info->GAME_MODE == UCIMODE) {
-                printf("info score cp %d depth %d nodes %ld time %d ", bestScore, currentDepth, info->nodes, GetTimeMs() - info->starttime);
-            } else if (info->GAME_MODE == XBOARDMODE && info->POST_THINKING == true) {
-                printf("%d %d %d %ld ", currentDepth, bestScore, (GetTimeMs() - info->starttime) / 10, info->nodes);
-            } else if (info->POST_THINKING == true) {
-                printf("score:%d depth:%d nodes:%ld time:%d(ms) ", bestScore, currentDepth, info->nodes, GetTimeMs() - info->starttime);
+            printf("info score cp %d depth %d nodes %ld time %d ", bestScore, currentDepth, info->nodes, GetTimeMs() - info->starttime);
+            pvMoves = GetPvLine(currentDepth, pos);
+            printf("pv");
+            for (pvNum = 0; pvNum < pvMoves; ++pvNum) {
+                printf(" %s", PrMove(pos->PvArray[pvNum]));
             }
-            if (info->GAME_MODE == UCIMODE || info->POST_THINKING == true) {
-                pvMoves = GetPvLine(currentDepth, pos);
-                if (info->GAME_MODE != XBOARDMODE) {
-                    printf("pv");
-                }
-                for (pvNum = 0; pvNum < pvMoves; ++pvNum) {
-                    printf(" %s", PrMove(pos->PvArray[pvNum]));
-                }
-                printf("\n");
-            }
+            printf("\n");
         }
     }
 
-    if (info->GAME_MODE == UCIMODE) {
-        printf("bestmove %s\n", PrMove(bestMove));
-    } else if (info->GAME_MODE == XBOARDMODE) {
-        printf("move %s\n", PrMove(bestMove));
-        MakeMove(pos, bestMove);
-    } else {
-        printf("\n\n***!! mira makes move %s !!***\n\n", PrMove(bestMove));
-        MakeMove(pos, bestMove);
-        PrintBoard(pos);
-    }
+    printf("bestmove %s\n", PrMove(bestMove));
 }

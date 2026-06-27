@@ -15,12 +15,11 @@ brew install mira
 ## Run
 
 ```sh
-mira            # console mode — play in the terminal (default)
-mira uci        # UCI protocol (for GUIs like Arena, cutechess)
-mira xboard     # XBoard/WinBoard protocol
+mira            # console mode (default)
+mira uci        # UCI protocol
 ```
 
-Pass `nobook` to disable the opening book, e.g. `mira uci nobook`.
+Pass `nobook` to disable the opening book - `mira uci nobook`.
 
 ## Build from source
 
@@ -34,6 +33,7 @@ make debug      # debug build (asserts on)
 
 - 120-square mailbox + bitboard hybrid board representation
 - Alpha-beta search with PV table, killers, and history heuristics
+- Worker thread for search
 - Zobrist hashing with a transposition table
 - Polyglot opening book support
 - Perft testing for move-generation correctness

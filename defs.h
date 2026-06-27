@@ -152,6 +152,12 @@ typedef struct {
     int UseBook;
 } S_OPTIONS;
 
+typedef struct {
+    S_SEARCHINFO *info;
+    S_BOARD *originalPosition;
+    S_HASHTABLE *ttable;
+} S_SEARCH_THREAD_DATA;
+
 /* GAME MOVES */
 /*
 0000 0000 0000 0000 0000 0111 1111 -> From 0x7F
@@ -289,6 +295,7 @@ extern void InitMvvLva();
 
 // search.c
 extern void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info, S_HASHTABLE *table);
+extern int SearchPosition_Thread(void *data);
 
 // makemove.c
 extern void TakeMove(S_BOARD *pos);
@@ -301,14 +308,13 @@ extern void PerftTest(int depth, S_BOARD *pos);
 
 // misc.c
 extern int GetTimeMs();
-extern void ReadInput(S_SEARCHINFO *info);
 
 // pvtable.c
 extern void InitHashTable(S_HASHTABLE *table, const int MB);
 extern void StoreHashEntry(S_BOARD *pos, S_HASHTABLE *table, const int move, int score, const int flags, const int depth);
 extern int ProbeHashEntry(S_BOARD *pos, S_HASHTABLE *table, int *move, int *score, int alpha, int beta, int depth);
-extern int ProbePvMove(const S_BOARD *pos, S_HASHTABLE *table);
-extern int GetPvLine(const int depth, S_BOARD *pos, S_HASHTABLE *table);
+extern int ProbePvMove(const S_BOARD *pos, const S_HASHTABLE *table);
+extern int GetPvLine(const int depth, S_BOARD *pos, const S_HASHTABLE *table);
 extern void ClearHashTable(S_HASHTABLE *table);
 
 // evaluate.c

@@ -38,6 +38,12 @@ make debug      # debug build (asserts on)
 - Polyglot opening book support
 - Perft testing for move-generation correctness
 
+## To Do
+
+- Parallel search using [Lazy SMP](https://www.chessprogramming.org/Lazy_SMP)
+- Perf tuning (PVS/LMR/Aspiration)
+- Magic bitboards for big pieces (maybe)
+
 ## License
 
 [MIT](LICENSE) © Ananth Narayan

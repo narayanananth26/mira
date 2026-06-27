@@ -2,7 +2,7 @@
 
 > Mom, I Resigned Again
 
-A chess engine written in C (VICE-style).
+A chess engine written in C ([VICE-style](https://github.com/bluefeversoft/vice/tree/main)).
 
 ## Install
 

@@ -274,6 +274,7 @@ extern char *PrSq(const int sq);
 extern char *PrMove(const int move);
 extern void PrintMoveList(const S_MOVELIST *list);
 extern int ParseMove(char *ptrChar, S_BOARD *pos);
+extern int ParseSan(char *ptrChar, S_BOARD *pos);
 
 // validate.c
 extern bool SqOnBoard(const int sq);
@@ -327,5 +328,8 @@ extern void UciLoop(S_BOARD *pos, S_SEARCHINFO *info);
 extern int GetBookMove(S_BOARD *board);
 extern void InitPolyBook();
 extern void CleanPolyBook();
+
+// console.c
+extern void PrintBoardFor(const S_BOARD *pos, const int humanSide);
 
 #endif

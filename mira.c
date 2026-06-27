@@ -21,35 +21,25 @@ int main(int argc, char *argv[]) {
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
 
+    info->GAME_MODE = 0;
+
     int ArgNum = 0;
+    int uciMode = 0;
 
     for (ArgNum = 0; ArgNum < argc; ++ArgNum) {
         if (strncmp(argv[ArgNum], "nobook", 6) == 0) {
             EngineOptions->UseBook = false;
             printf("Book Off\n");
+        } else if (strncmp(argv[ArgNum], "uci", 3) == 0) {
+            uciMode = 1;
         }
     }
 
-    printf("Welcome to mira! Type 'uci' for uci mode...\n");
+    if (uciMode)
+        UciLoop(pos, info);
+    else
+        ConsoleLoop(pos, info);
 
-    char line[256];
-    while (true) {
-        memset(&line[0], 0, sizeof(line));
-
-        fflush(stdout);
-        if (!fgets(line, 256, stdin))
-            continue;
-        if (line[0] == '\n')
-            continue;
-        if (!strncmp(line, "uci", 3)) {
-            UciLoop(pos, info);
-            if (info->quit == true)
-                break;
-            continue;
-        } else if (!strncmp(line, "quit", 4)) {
-            break;
-        }
-    }
     free(HashTable->pTable);
 
     return 0;

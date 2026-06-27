@@ -35,3 +35,203 @@ void PrintBoardFor(const S_BOARD *pos, const int humanSide) {
     }
     printf("\n\n");
 }
+
+static int LegalMoveCount(S_BOARD *pos) {
+
+    S_MOVELIST list[1];
+    GenerateAllMoves(pos, list);
+
+    int index = 0;
+    int legal = 0;
+
+    for (index = 0; index < list->count; ++index) {
+        if (!MakeMove(pos, list->moves[index].move))
+            continue;
+        TakeMove(pos);
+        legal++;
+    }
+
+    return legal;
+}
+
+static int RepCount(const S_BOARD *pos) {
+
+    int index = 0;
+    int count = 0;
+
+    for (index = 0; index < pos->hisPly; ++index) {
+        if (pos->history[index].posKey == pos->posKey)
+            count++;
+    }
+
+    return count;
+}
+
+enum { ONGOING, CHECKMATE, STALEMATE, FIFTY, THREEFOLD };
+
+static int GameStatus(S_BOARD *pos) {
+
+    if (LegalMoveCount(pos) == 0) {
+        if (SqAttacked(pos->KingSq[pos->side], pos->side ^ 1, pos))
+            return CHECKMATE;
+        return STALEMATE;
+    }
+    if (pos->fiftyMove >= 100)
+        return FIFTY;
+    if (RepCount(pos) >= 2)
+        return THREEFOLD;
+
+    return ONGOING;
+}
+
+// difficulty 1-5 
+static int Think(S_BOARD *pos, S_SEARCHINFO *info, int useTime, int value) {
+
+    S_BOARD copy[1];
+    memcpy(copy, pos, sizeof(S_BOARD));
+
+    info->GAME_MODE = 1;
+    info->stopped = 0;
+    info->quit = 0;
+
+    if (useTime) {
+        info->timeset = true;
+        info->starttime = GetTimeMs();
+        info->stoptime = info->starttime + value;
+        info->depth = MAXDEPTH;
+    } else {
+        info->timeset = false;
+        info->depth = value;
+    }
+
+    SearchPosition(copy, info, HashTable);
+    return copy->PvArray[0];
+}
+
+// {useTime, value}
+static const int Levels[5][2] = {{0, 1}, {0, 3}, {0, 5}, {1, 1000}, {1, 3000}};
+
+static void PrintLegal(S_BOARD *pos) {
+
+    S_MOVELIST list[1];
+    GenerateAllMoves(pos, list);
+
+    int index = 0;
+    int shown = 0;
+
+    for (index = 0; index < list->count; ++index) {
+        if (!MakeMove(pos, list->moves[index].move))
+            continue;
+        TakeMove(pos);
+        printf("%s ", PrMove(list->moves[index].move));
+        shown++;
+    }
+    printf("\n(%d legal moves)\n", shown);
+}
+
+void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info) {
+
+    char line[256];
+    char note[64] = "";
+    int humanSide;
+    int level = 3;
+    int move;
+    int redraw = 1;
+
+    printf("\nmira console - let's play\n");
+
+    printf("play as (w)hite, (b)lack or (r)andom? ");
+    if (!fgets(line, sizeof(line), stdin))
+        return;
+    if (line[0] == 'b')
+        humanSide = BLACK;
+    else if (line[0] == 'r')
+        humanSide = (GetTimeMs() & 1) ? WHITE : BLACK;
+    else
+        humanSide = WHITE;
+
+    printf("difficulty (1-5)? ");
+    if (!fgets(line, sizeof(line), stdin))
+        return;
+    if (line[0] >= '1' && line[0] <= '5')
+        level = line[0] - '0';
+
+    printf("you are %s, level %d\n", humanSide == WHITE ? "white" : "black", level);
+
+    ParseFen(START_FEN, pos);
+
+    while (true) {
+        if (redraw) {
+            PrintBoardFor(pos, humanSide);
+            if (note[0])
+                printf("%s\n", note);
+        }
+        redraw = 1;
+
+        int status = GameStatus(pos);
+        if (status == CHECKMATE) {
+            printf("checkmate - %s\n", pos->side == humanSide ? "mira wins" : "you win");
+            break;
+        } else if (status == STALEMATE) {
+            printf("stalemate - draw\n");
+            break;
+        } else if (status == FIFTY) {
+            printf("draw - fifty move rule\n");
+            break;
+        } else if (status == THREEFOLD) {
+            printf("draw - threefold repetition\n");
+            break;
+        }
+
+        // engine's turn
+        if (pos->side != humanSide) {
+            printf("mira is thinking...\n");
+            move = Think(pos, info, Levels[level - 1][0], Levels[level - 1][1]);
+            if (move == NOMOVE)
+                break;
+            MakeMove(pos, move);
+            snprintf(note, sizeof(note), "mira plays %s", PrMove(move));
+            continue;
+        }
+
+        // human's turn
+        printf("your move: ");
+        if (!fgets(line, sizeof(line), stdin))
+            break;
+        if (line[0] == '\n') {
+            redraw = 0;
+            continue;
+        }
+
+        if (!strncmp(line, "quit", 4) || !strncmp(line, "exit", 4)) {
+            break;
+            continue;
+        } else if (!strncmp(line, "moves", 5)) {
+            PrintLegal(pos);
+            redraw = 0;
+            continue;
+        } else if (!strncmp(line, "new", 3)) {
+            ParseFen(START_FEN, pos);
+            note[0] = '\0';
+            continue;
+        } else if (!strncmp(line, "hint", 4)) {
+            move = Think(pos, info, 0, 4);
+            snprintf(note, sizeof(note), "hint: %s", PrMove(move));
+            continue;
+        } else if (!strncmp(line, "undo", 4) || line[0] == 'u') {
+            int back = pos->hisPly >= 2 ? 2 : pos->hisPly;
+            while (back-- > 0)
+                TakeMove(pos);
+            note[0] = '\0';
+            continue;
+        }
+
+        move = ParseSan(line, pos);
+        if (move == NOMOVE) {
+            snprintf(note, sizeof(note), "illegal or unknown move");
+            continue;
+        }
+        MakeMove(pos, move);
+        note[0] = '\0';
+    }
+}

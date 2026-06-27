@@ -44,6 +44,135 @@ char *PrMove(const int move) {
     return MvStr;
 }
 
+static char SanLetter(int piece) {
+    switch (piece) {
+    case wN:
+    case bN:
+        return 'N';
+    case wB:
+    case bB:
+        return 'B';
+    case wR:
+    case bR:
+        return 'R';
+    case wQ:
+    case bQ:
+        return 'Q';
+    case wK:
+    case bK:
+        return 'K';
+    default:
+        return 0;
+    }
+}
+
+char *PrMoveSan(S_BOARD *pos, const int move) {
+
+    static char san[16];
+
+    int from = FROMSQ(move);
+    int to = TOSQ(move);
+    int piece = pos->pieces[from];
+    int promoted = PROMOTED(move);
+    int isCap = (CAPTURED(move) != EMPTY) || (move & MFLAGEP);
+    char letter = SanLetter(piece);
+    int n = 0;
+    int index = 0;
+
+    if (move & MFLAGCA) {
+        if (FilesBrd[to] == FILE_G) {
+            san[n++] = 'O';
+            san[n++] = '-';
+            san[n++] = 'O';
+        } else {
+            san[n++] = 'O';
+            san[n++] = '-';
+            san[n++] = 'O';
+            san[n++] = '-';
+            san[n++] = 'O';
+        }
+    } else if (letter) {
+        san[n++] = letter;
+
+        S_MOVELIST list[1];
+        GenerateAllMoves(pos, list);
+        int sameFile = 0;
+        int sameRank = 0;
+        int ambig = 0;
+
+        for (index = 0; index < list->count; ++index) {
+            int m2 = list->moves[index].move;
+            if (m2 == move || pos->pieces[FROMSQ(m2)] != piece || TOSQ(m2) != to)
+                continue;
+            if (!MakeMove(pos, m2))
+                continue;
+            TakeMove(pos);
+            ambig = 1;
+            if (FilesBrd[FROMSQ(m2)] == FilesBrd[from])
+                sameFile = 1;
+            if (RanksBrd[FROMSQ(m2)] == RanksBrd[from])
+                sameRank = 1;
+        }
+
+        if (ambig) {
+            if (!sameFile) {
+                san[n++] = 'a' + FilesBrd[from];
+            } else if (!sameRank) {
+                san[n++] = '1' + RanksBrd[from];
+            } else {
+                san[n++] = 'a' + FilesBrd[from];
+                san[n++] = '1' + RanksBrd[from];
+            }
+        }
+
+        if (isCap)
+            san[n++] = 'x';
+        san[n++] = 'a' + FilesBrd[to];
+        san[n++] = '1' + RanksBrd[to];
+    } else {
+        // pawn
+        if (isCap) {
+            san[n++] = 'a' + FilesBrd[from];
+            san[n++] = 'x';
+        }
+        san[n++] = 'a' + FilesBrd[to];
+        san[n++] = '1' + RanksBrd[to];
+
+        if (promoted) {
+            san[n++] = '=';
+            if (IsKn(promoted))
+                san[n++] = 'N';
+            else if (IsRQ(promoted) && !IsBQ(promoted))
+                san[n++] = 'R';
+            else if (IsBQ(promoted) && !IsRQ(promoted))
+                san[n++] = 'B';
+            else
+                san[n++] = 'Q';
+        }
+    }
+
+    // +/# suffix
+    if (MakeMove(pos, move)) {
+        if (SqAttacked(pos->KingSq[pos->side], pos->side ^ 1, pos)) {
+            S_MOVELIST list[1];
+            GenerateAllMoves(pos, list);
+            int hasReply = 0;
+            for (index = 0; index < list->count; ++index) {
+                if (MakeMove(pos, list->moves[index].move)) {
+                    TakeMove(pos);
+                    hasReply = 1;
+                    break;
+                }
+            }
+            san[n++] = hasReply ? '+' : '#';
+        }
+        TakeMove(pos);
+    }
+
+    san[n] = '\0';
+    return san;
+}
+
 int ParseMove(char *ptrChar, S_BOARD *pos) {
 
     assert(CheckBoard(pos));

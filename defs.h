@@ -34,8 +34,6 @@ enum { RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8, RANK_NONE
 
 enum { WHITE, BLACK, BOTH };
 
-enum { UCIMODE, XBOARDMODE, CONSOLEMODE };
-
 // clang-format off
 enum {
     A1 = 21, B1, C1, D1, E1, F1, G1, H1,
@@ -146,9 +144,6 @@ typedef struct {
     float fh;  // fail high
     float fhf; // fail high first
     int nullCut;
-
-    int GAME_MODE;
-    int POST_THINKING;
 
 } S_SEARCHINFO;
 
@@ -319,12 +314,6 @@ extern int EvaluatePosition(const S_BOARD *pos);
 
 // uci.c
 extern void UciLoop(S_BOARD *pos, S_SEARCHINFO *info);
-
-// xboard.c
-extern void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info);
-extern void XBoardLoop(S_BOARD *pos, S_SEARCHINFO *info);
-extern void PrintEngineStatus(const S_BOARD *pos, const S_SEARCHINFO *info);
-extern void PrintCommands(const int mode);
 
 // polybook.c
 extern int GetBookMove(S_BOARD *board);

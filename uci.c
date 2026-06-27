@@ -63,6 +63,8 @@ void ParseGo(char *line, S_SEARCHINFO *info, S_BOARD *pos) {
         info->depth = MAXDEPTH;
     }
 
+    printf("time:%d start:%d stop:%d depth:%d timeset:%d\n", time, info->starttime, info->stoptime, info->depth, info->timeset);
+
     SearchPosition(pos, info);
 }
 
@@ -106,8 +108,6 @@ void ParsePosition(char *lineIn, S_BOARD *pos) {
 
 void UciLoop(S_BOARD *pos, S_SEARCHINFO *info) {
 
-    info->GAME_MODE = UCIMODE;
-
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
 
@@ -138,8 +138,9 @@ void UciLoop(S_BOARD *pos, S_SEARCHINFO *info) {
             ParsePosition("position startpos\n", pos);
         } else if (!strncmp(line, "go", 2)) {
             ParseGo(line, info, pos);
-        } else if (!strncmp(line, "help", 4)) {
-            PrintEngineStatus(pos, info);
+        } else if (!strncmp(line, "run", 3)) {
+            ParseFen(START_FEN, pos);
+            ParseGo("go infinite", info, pos);
         } else if (!strncmp(line, "print", 5)) {
             PrintBoard(pos);
         } else if (!strncmp(line, "quit", 4) || !strncmp(line, "exit", 4) || !strncmp(line, "q", 1)) {

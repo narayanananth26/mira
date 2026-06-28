@@ -378,6 +378,8 @@ int ParseSan(char *ptrChar, S_BOARD *pos, int *reason) {
             disFile = t[i] - 'a';
         else if (t[i] >= '1' && t[i] <= '8')
             disRank = t[i] - '1';
+        else
+            FAIL(SAN_MALFORMED);
     }
 
     S_MOVELIST list[1];

@@ -51,6 +51,8 @@ enum {
 
 enum { WKCA = 1, WQCA = 2, BKCA = 4, BQCA = 8 };
 
+enum { SAN_OK, SAN_MALFORMED, SAN_ILLEGAL, SAN_AMBIGUOUS };
+
 typedef struct {
     int move;
     int score;
@@ -279,7 +281,7 @@ extern char *PrMove(const int move);
 extern char *PrMoveSan(S_BOARD *pos, const int move);
 extern void PrintMoveList(const S_MOVELIST *list);
 extern int ParseMove(char *ptrChar, S_BOARD *pos);
-extern int ParseSan(char *ptrChar, S_BOARD *pos);
+extern int ParseSan(char *ptrChar, S_BOARD *pos, int *reason);
 
 // validate.c
 extern bool SqOnBoard(const int sq);

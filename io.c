@@ -248,11 +248,18 @@ static int MatchCastle(S_BOARD *pos, int kingside) {
     return NOMOVE;
 }
 
+// clang-format off
+#define FAIL(r) do { if (reason) *reason = (r); return NOMOVE; } while (0)
+// clang-format on
+
 // Standard Algebraic Notation
 // https://www.chessprogramming.org/Algebraic_Chess_Notation#Standard_Algebraic_Notation_.28SAN.29
-int ParseSan(char *ptrChar, S_BOARD *pos) {
+int ParseSan(char *ptrChar, S_BOARD *pos, int *reason) {
 
     assert(CheckBoard(pos));
+    if (reason) {
+        *reason = SAN_OK;
+    }
 
     char buf[16];
     int n = 0;
@@ -266,13 +273,23 @@ int ParseSan(char *ptrChar, S_BOARD *pos) {
     }
     buf[n] = '\0';
     if (n == 0)
-        return NOMOVE;
+        FAIL(SAN_MALFORMED);
 
     // castling
-    if (strcmp(buf, "O-O-O") == 0 || strcmp(buf, "0-0-0") == 0)
-        return MatchCastle(pos, false);
-    if (strcmp(buf, "O-O") == 0 || strcmp(buf, "0-0") == 0)
-        return MatchCastle(pos, true);
+    if (strcmp(buf, "O-O-O") == 0 || strcmp(buf, "0-0-0") == 0) {
+        int mv = MatchCastle(pos, false);
+        if (mv == NOMOVE && reason) {
+            *reason = SAN_ILLEGAL;
+        }
+        return mv;
+    }
+    if (strcmp(buf, "O-O") == 0 || strcmp(buf, "0-0") == 0) {
+        int mv = MatchCastle(pos, true);
+        if (mv == NOMOVE && reason) {
+            *reason = SAN_ILLEGAL;
+        }
+        return mv;
+    }
 
     // coordinate notation
     if (n >= 4 && buf[0] >= 'a' && buf[0] <= 'h' && buf[1] >= '1' && buf[1] <= '8' && buf[2] >= 'a' && buf[2] <= 'h' && buf[3] >= '1' && buf[3] <= '8')
@@ -347,11 +364,11 @@ int ParseSan(char *ptrChar, S_BOARD *pos) {
 
     // destination
     if (tn < 2)
-        return NOMOVE;
+        FAIL(SAN_MALFORMED);
     int destFile = t[tn - 2] - 'a';
     int destRank = t[tn - 1] - '1';
     if (destFile < FILE_A || destFile > FILE_H || destRank < RANK_1 || destRank > RANK_8)
-        return NOMOVE;
+        FAIL(SAN_MALFORMED);
     int destSq = FR2SQ(destFile, destRank);
 
     int disFile = -1;
@@ -401,12 +418,17 @@ int ParseSan(char *ptrChar, S_BOARD *pos) {
         TakeMove(pos);
 
         if (found != NOMOVE)
-            return NOMOVE;
+            FAIL(SAN_AMBIGUOUS);
         found = move;
     }
 
+    if (found == NOMOVE && reason) {
+        *reason = SAN_ILLEGAL;
+    }
     return found;
 }
+
+#undef FAIL
 
 void PrintMoveList(const S_MOVELIST *list) {
     int index = 0;

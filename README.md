@@ -36,7 +36,6 @@ make debug      # debug build (asserts on)
 - Worker thread for search
 - Zobrist hashing with a transposition table
 - Polyglot opening book support
-- Perft testing for move-generation correctness
 
 ## To Do
 

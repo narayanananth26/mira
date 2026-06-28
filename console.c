@@ -3,9 +3,8 @@
 #include <string.h>
 
 static const char *Glyph[13] = {
-    " ",
-    "♟", "♞", "♝", "♜", "♛", "♚", // white
-    "♟", "♞", "♝", "♜", "♛", "♚", // black
+    " ", "♟", "♞", "♝", "♜", "♛", "♚", // white
+    "♟", "♞", "♝", "♜", "♛", "♚",      // black
 };
 
 #define LIGHT_BG "\033[48;5;180m"
@@ -283,9 +282,20 @@ void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info) {
             continue;
         }
 
-        move = ParseSan(line, pos);
+        int reason;
+        move = ParseSan(line, pos, &reason);
         if (move == NOMOVE) {
-            snprintf(note, sizeof(note), "illegal or unknown move");
+            switch (reason) {
+            case SAN_AMBIGUOUS:
+                snprintf(note, sizeof(note), "ambiguous move - add the source file/rank or try coordinate notation (sourcedest - e.g. e2e4)");
+                break;
+            case SAN_MALFORMED:
+                snprintf(note, sizeof(note), "couldn't read that move");
+                break;
+            default:
+                snprintf(note, sizeof(note), "illegal move");
+                break;
+            }
             continue;
         }
         MakeMove(pos, move);

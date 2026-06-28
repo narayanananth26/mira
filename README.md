@@ -8,7 +8,6 @@ A chess engine written in C ([VICE-style](https://github.com/bluefeversoft/vice/
 
 ```sh
 brew tap narayanananth26/mira
-brew trust narayanananth26/mira
 brew install mira
 ```
 

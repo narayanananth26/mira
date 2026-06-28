@@ -75,8 +75,8 @@ int ProbeHashEntry(S_BOARD *pos, S_HASHTABLE *table, int *move, int *score, int 
     assert(index >= 0 && index <= table->numEntries - 1);
     assert(depth >= 1 && depth < MAXDEPTH);
     assert(alpha < beta);
-    assert(alpha >= -INF_BOUND && alpha <= INF_BOUND);
-    assert(beta >= -INF_BOUND && beta <= INF_BOUND);
+    assert(alpha >= -AB_BOUND && alpha <= AB_BOUND);
+    assert(beta >= -AB_BOUND && beta <= AB_BOUND);
     assert(pos->ply >= 0 && pos->ply < MAXDEPTH);
 
     if (table->pTable[index].posKey == pos->posKey) {
@@ -95,7 +95,7 @@ int ProbeHashEntry(S_BOARD *pos, S_HASHTABLE *table, int *move, int *score, int 
 
             switch (table->pTable[index].flags) {
 
-                assert(*score >= -INF_BOUND && *score <= INF_BOUND);
+                assert(*score >= -AB_BOUND && *score <= AB_BOUND);
 
             case HFALPHA:
                 if (*score <= alpha) {
@@ -129,7 +129,7 @@ void StoreHashEntry(S_BOARD *pos, S_HASHTABLE *table, const int move, int score,
     assert(index >= 0 && index <= table->numEntries - 1);
     assert(depth >= 1 && depth < MAXDEPTH);
     assert(flags >= HFALPHA && flags <= HFEXACT);
-    assert(score >= -INF_BOUND && score <= INF_BOUND);
+    assert(score >= -AB_BOUND && score <= AB_BOUND);
     assert(pos->ply >= 0 && pos->ply < MAXDEPTH);
 
     // replace only if gen/depth is greater

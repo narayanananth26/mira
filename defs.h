@@ -22,8 +22,9 @@ typedef unsigned long long U64;
 #define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 #define INF_BOUND 32000
-#define ISMATE (INF_BOUND - MAXDEPTH)
-#define NOSCORE (INF_BOUND + 1) // no search score (e.g. book move)
+#define AB_BOUND 30000
+#define ISMATE (AB_BOUND - MAXDEPTH)
+#define NOSCORE (AB_BOUND + 1) // no search score (e.g. book move)
 
 // clang-format off
 enum { EMPTY, wP, wN, wB, wR, wQ, wK, bP, bN, bB, bR, bQ, bK };

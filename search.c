@@ -99,7 +99,7 @@ static int Quiescence(int alpha, int beta, S_BOARD *pos, S_SEARCHINFO *info) {
 
     int Score = EvaluatePosition(pos);
 
-    assert(Score > -INF_BOUND && Score < INF_BOUND);
+    assert(Score > -AB_BOUND && Score < AB_BOUND);
 
     if (Score >= beta) {
         return beta;
@@ -114,7 +114,7 @@ static int Quiescence(int alpha, int beta, S_BOARD *pos, S_SEARCHINFO *info) {
 
     int MoveNum = 0;
     int Legal = 0;
-    Score = -INF_BOUND;
+    Score = -AB_BOUND;
 
     for (MoveNum = 0; MoveNum < list->count; ++MoveNum) {
 
@@ -178,7 +178,7 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
         depth++;
     }
 
-    int Score = -INF_BOUND;
+    int Score = -AB_BOUND;
     int PvMove = NOMOVE;
 
     if (ProbeHashEntry(pos, table, &PvMove, &Score, alpha, beta, depth) == true) {
@@ -208,9 +208,9 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
     int OldAlpha = alpha;
     int BestMove = NOMOVE;
 
-    int BestScore = -INF_BOUND;
+    int BestScore = -AB_BOUND;
 
-    Score = -INF_BOUND;
+    Score = -AB_BOUND;
 
     if (PvMove != NOMOVE) {
         for (MoveNum = 0; MoveNum < list->count; ++MoveNum) {
@@ -267,7 +267,7 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
 
     if (Legal == 0) {
         if (InCheck) {
-            return -INF_BOUND + pos->ply;
+            return -AB_BOUND + pos->ply;
         } else {
             return 0;
         }
@@ -297,7 +297,7 @@ int SearchPosition_Thread(void *data) {
 void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info, S_HASHTABLE *table) {
 
     int bestMove = NOMOVE;
-    int bestScore = -INF_BOUND;
+    int bestScore = -AB_BOUND;
     int currentDepth = 0;
     int pvMoves = 0;
     int pvNum = 0;
@@ -313,7 +313,7 @@ void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info, S_HASHTABLE *table) {
     // iterative deepening
     if (bestMove == NOMOVE) {
         for (currentDepth = 1; currentDepth <= info->depth; ++currentDepth) {
-            int score = AlphaBeta(-INF_BOUND, INF_BOUND, currentDepth, pos, info, table, true);
+            int score = AlphaBeta(-AB_BOUND, AB_BOUND, currentDepth, pos, info, table, true);
 
             // keep the last fully searched depth, drop an aborted one
             if (info->stopped == true) {

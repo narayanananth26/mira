@@ -155,9 +155,9 @@ static void ClearScreen(void) { printf("\033[2J\033[3J\033[H"); }
 // score (white-relative cp)
 static void FormatScore(char *buf, int size, int whiteCp) {
     if (whiteCp > ISMATE)
-        snprintf(buf, size, "#%d", (INF_BOUND - whiteCp + 1) / 2);
+        snprintf(buf, size, "#%d", (AB_BOUND - whiteCp + 1) / 2);
     else if (whiteCp < -ISMATE)
-        snprintf(buf, size, "#-%d", (INF_BOUND + whiteCp + 1) / 2);
+        snprintf(buf, size, "#-%d", (AB_BOUND + whiteCp + 1) / 2);
     else
         snprintf(buf, size, "%+.2f", whiteCp / 100.0);
 }
